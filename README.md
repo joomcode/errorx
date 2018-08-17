@@ -1,6 +1,6 @@
 ## Introduction
 
-Conventional approach towards errors in *golang* is quite limited.
+Conventional approach towards errors in *Go* is quite limited.
 
 The typical case implies an error being created at some point:
 ```go

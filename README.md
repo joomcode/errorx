@@ -66,7 +66,7 @@ Error: this could be so much better, cause: common.illegal_state: unfortunate
 	main.go:11
   ```
 
-Now we have some context to our little problem, as well as a full stack trace of the original cause - which is, in effect, all that you really need, most of the time. ```errorx.Decorate``` is handy to add some info which a stack trace does not already hold: an id of the relevant entity, a portion of the failed request, etc. In all other cases, the good old ```if err != nil {return nil}``` still works for you.
+Now we have some context to our little problem, as well as a full stack trace of the original cause - which is, in effect, all that you really need, most of the time. ```errorx.Decorate``` is handy to add some info which a stack trace does not already hold: an id of the relevant entity, a portion of the failed request, etc. In all other cases, the good old ```if err != nil {return err}``` still works for you.
 
 And this, frankly, may be quite enough. With a set of standard error types provided with *errorx* and a syntax to create your own (note that a name of the type is a good way to express its semantics), the best way to deal with errors is in an opaque manner: create them, add information and log as some point. Whenever this is sufficient, don't go any further. The simpler, the better.
 

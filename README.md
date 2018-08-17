@@ -43,9 +43,7 @@ Error-related, negative codepath is typically less well tested, though of, and m
 With *errorx*, the pattern above looks like this:
 
 ```go
-if err != nil {
   return nil, errorx.IllegalState.New("unfortunate")
-}
 ```
 ```go
 if err != nil {

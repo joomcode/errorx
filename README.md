@@ -34,7 +34,7 @@ An *errorx* library makes an approach to create a toolset that would help remedy
 * It must be easy to create an error, add some context to it, check for it
 * A kind of error that requires a special treatment by the caller *is* a part of a public API; an excessive amount of such kinds is a code smell
 
-As s result, the goal of the library is to provide a brief, expressive syntax for a conventional error handling and to discourage usage patterns that bring less value than harm.
+As a result, the goal of the library is to provide a brief, expressive syntax for a conventional error handling and to discourage usage patterns that bring less value than harm.
 
 Error-related, negative codepath is typically less well tested, though of, and may confuse the reader more than its positive counterpart. Therefore, an error system could do well without too much of a flexibility and unpredictability
 

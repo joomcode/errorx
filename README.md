@@ -117,7 +117,7 @@ As an essential part of debug information, stack traces are included in all *err
 When an error is passed along, the original stack trace is simply retained, as this typically takes place along the lines if the same frames that were originally captured. When an error is received from another goroutine, use this to add frames that would otherwise be missing:
 
 ```go
-return EnhanceStackTrace(<-errorChan, "task failed")
+return errorx.EnhanceStackTrace(<-errorChan, "task failed")
 ```
 
 Result would look like this:

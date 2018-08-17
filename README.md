@@ -122,7 +122,7 @@ return errorx.EnhanceStackTrace(<-errorChan, "task failed")
 
 Result would look like this:
 ```
-Error: common.illegal_state: unfortunate
+Error: task failed, cause: common.illegal_state: unfortunate
  at main.proxy()
 	main.go:17
  at main.main()

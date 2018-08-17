@@ -29,7 +29,7 @@ It doesn't take long to find out that this is not often enough. There's little f
 An *errorx* library makes an approach to create a toolset that would help remedy this issue with these considerations in mind:
 * No extra care should be required for an error to have all the required debug information; it is the opposite that may constitute a special case
 * There must be a way to distinguish one kind of error from another, as they may imply or require a different handling in user code
-* Errors must be composable, and patterns like ```if err == io.EOF``` defetat that purpose, so they should be avoided
+* Errors must be composable, and patterns like ```if err == io.EOF``` defeat that purpose, so they should be avoided
 * Some context information may be added to the error along the way, and there must be a way to do so without altering the semantics of the error
 * It must be easy to create an error, add some context to it, check for it
 * A kind of error that requires a special treatment by the caller *is* a part of a public API; an excessive amount of such kinds is a code smell

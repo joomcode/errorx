@@ -10,7 +10,7 @@ return errors.New("now this is unfortunate")
 Then being handled with a no-brainer:
 ```go
 if err != nil {
-  return nil, err
+  return err
 }
 ```
 
@@ -27,14 +27,14 @@ It doesn't take long to find out that this is not often enough. There's little f
 > Error: wrong argument value
 
 An *errorx* library makes an approach to create a toolset that would help remedy this issue with these considerations in mind:
-* No extra care should be required for an error to have all the required debug information; it is the opposite that may constitute a special case
+* No extra care should be required for an error to have all the necessary debug information; it is the opposite that may constitute a special case
 * There must be a way to distinguish one kind of error from another, as they may imply or require a different handling in user code
 * Errors must be composable, and patterns like ```if err == io.EOF``` defeat that purpose, so they should be avoided
 * Some context information may be added to the error along the way, and there must be a way to do so without altering the semantics of the error
 * It must be easy to create an error, add some context to it, check for it
 * A kind of error that requires a special treatment by the caller *is* a part of a public API; an excessive amount of such kinds is a code smell
 
-As a result, the goal of the library is to provide a brief, expressive syntax for a conventional error handling and to discourage usage patterns that bring less value than harm.
+As a result, the goal of the library is to provide a brief, expressive syntax for a conventional error handling and to discourage usage patterns that bring more harm than they're worth.
 
 Error-related, negative codepath is typically less well tested, though of, and may confuse the reader more than its positive counterpart. Therefore, an error system could do well without too much of a flexibility and unpredictability
 
@@ -43,11 +43,11 @@ Error-related, negative codepath is typically less well tested, though of, and m
 With *errorx*, the pattern above looks like this:
 
 ```go
-  return nil, errorx.IllegalState.New("unfortunate")
+return errorx.IllegalState.New("unfortunate")
 ```
 ```go
 if err != nil {
-  return nil, errorx.Decorate(err, "this could be so much better")
+  return errorx.Decorate(err, "this could be so much better")
 }
 ```
 ```go
@@ -74,6 +74,7 @@ And this, frankly, may be quite enough. With a set of standard error types provi
 
 If an error requires special treatment, it may be done like this:
 ```go
+// MyError = MyNamespace.NewType("my_error")
 if errorx.IsOfType(err, MyError) {
   // handle
 }
@@ -83,6 +84,7 @@ Note that it is never a good idea to inspect a message of an error. Type check, 
 
 An alternative is a mechanisms called **traits**:
 ```go
+// thie first parameter is a name of new error type, the second is a reference to existing declared trait
 TimeoutElapsed       = CommonErrors.NewType("timeout", Timeout())
 ```
 
@@ -99,7 +101,7 @@ Note that here a check is made against a trait, not a type, so any type with the
 
 The example above introduced ```errorx.Decorate()```, a syntax used to add message as an error is passed along. This mechanism is highly non-intrusive: any properties an original error possessed, a result of a  ```Decorate()``` will possess, too.
 
-Sometimes, though, it is not the desired effect. A possibility to make a type check as a double edged one, and should be restricted as often as it is allowed. The bad way to do so would be to create a new error and to pass an ```Error()``` output as a message. Among other possible issues, this would either lose or duplicate the stack trace information.
+Sometimes, though, it is not the desired effect. A possibility to make a type check is a double edged one, and should be restricted as often as it is allowed. The bad way to do so would be to create a new error and to pass an ```Error()``` output as a message. Among other possible issues, this would either lose or duplicate the stack trace information.
 
 A better alternative is:
 ```go
@@ -114,7 +116,7 @@ See ```WrapMany()``` and ```DecorateMany()``` for more sophisticated cases.
 
 As an essential part of debug information, stack traces are included in all *errorx* errors by default.
 
-When an error is passed along, the original stack trace is simply retained, as this typically takes place along the lines if the same frames that were originally captured. When an error is received from another goroutine, use this to add frames that would otherwise be missing:
+When an error is passed along, the original stack trace is simply retained, as this typically takes place along the lines of the same frames that were originally captured. When an error is received from another goroutine, use this to add frames that would otherwise be missing:
 
 ```go
 return errorx.EnhanceStackTrace(<-errorChan, "task failed")

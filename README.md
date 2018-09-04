@@ -74,7 +74,7 @@ And this, frankly, may be quite enough. With a set of standard error types provi
 
 If an error requires special treatment, it may be done like this:
 ```go
-// MyError = MyNamespace.NewType("my_error")
+// MyError = MyErrors.NewType("my_error")
 if errorx.IsOfType(err, MyError) {
   // handle
 }
@@ -84,8 +84,8 @@ Note that it is never a good idea to inspect a message of an error. Type check, 
 
 An alternative is a mechanisms called **traits**:
 ```go
-// thie first parameter is a name of new error type, the second is a reference to existing declared trait
-TimeoutElapsed       = CommonErrors.NewType("timeout", Timeout())
+// thie first parameter is a name of new error type, the second is a reference to existing trait
+TimeoutElapsed       = MyErrors.NewType("timeout", errorx.Timeout())
 ```
 
 Here, ```TimeoutElapsed``` error type is created with a Timeout() trait, and errors may be checked against it:

@@ -3,9 +3,10 @@ package benchmark
 import (
 	"errors"
 	"fmt"
-	"github.com/joomcode/errorx"
 	"runtime/debug"
 	"testing"
+
+	"github.com/joomcode/errorx"
 )
 
 var errorSink error
@@ -100,9 +101,9 @@ func createSimpleError() error {
 }
 
 var (
-	Errors = errorx.NewNamespace("errorx.benchmark")
+	Errors            = errorx.NewNamespace("errorx.benchmark")
 	NoStackTraceError = Errors.NewType("no_stack_trace").ApplyModifiers(errorx.TypeModifierOmitStackTrace)
-	StackTraceError = Errors.NewType("stack_trace")
+	StackTraceError   = Errors.NewType("stack_trace")
 )
 
 func createSimpleErrorxError() error {
@@ -118,11 +119,11 @@ type naiveError struct {
 }
 
 func (err naiveError) Error() string {
-	return fmt.Sprintf("benchmark\n%s",string(err.stack))
+	return fmt.Sprintf("benchmark\n%s", string(err.stack))
 }
 
 func createNaiveError() error {
-	return naiveError{stack:debug.Stack()}
+	return naiveError{stack: debug.Stack()}
 }
 
 func function0(depth int, generate func() error) error {
@@ -130,7 +131,7 @@ func function0(depth int, generate func() error) error {
 		return generate()
 	}
 
-	switch depth%3 {
+	switch depth % 3 {
 	case 0:
 		return function1(depth-1, generate)
 	case 1:

@@ -151,19 +151,19 @@ Other relevant tools include ```EnsureStackTrace(err)``` to provide an error of 
 As performance is obviously an issue, some measurements are in order. The benchmark is provided with the library. In all of benchmark cases, a very simple code is called that does nothing but grows a number of frames and immediately returns an error.
 
 Result sample (add hardware!):
-| name | runs | ns/op | note |
-| ------ | ------ | ------ | ------ |
-BenchmarkSimpleError10                    | 20000000 |     57.2 | simple error, 10 frames deep |
-BenchmarkErrorxError10                    | 10000000 |      138 | same with errorx error |
-BenchmarkStackTraceErrorxError10          |  1000000 |     1601 | same with collected stack trace |
-BenchmarkSimpleError100                   |  3000000 |      421 | simple error, 100 frames deep |
-BenchmarkErrorxError100                   |  3000000 |      507 | same with errorx error |
-BenchmarkStackTraceErrorxError100         |   300000 |     4450 | same with collected stack trace |
-BenchmarkStackTraceNaiveError100-8         	   | 2000 |	    588135 | same with naive debug.Stack() error implementation |
-BenchmarkSimpleErrorPrint100              |  2000000 |      617 | simple error, 100 frames deep, format output |
-BenchmarkErrorxErrorPrint100              |  2000000 |      935 | same with errorx error |
-BenchmarkStackTraceErrorxErrorPrint100    |    30000 |    58965 | same with collected stack trace |
-BenchmarkStackTraceNaiveErrorPrint100-8    	   | 2000 |	    599155 | same with naive debug.Stack() error implementation |
+name | runs | ns/op | note
+------ | ------ | ------ | ------
+BenchmarkSimpleError10                    | 20000000 |     57.2 | simple error, 10 frames deep
+BenchmarkErrorxError10                    | 10000000 |      138 | same with errorx error
+BenchmarkStackTraceErrorxError10          |  1000000 |     1601 | same with collected stack trace
+BenchmarkSimpleError100                   |  3000000 |      421 | simple error, 100 frames deep
+BenchmarkErrorxError100                   |  3000000 |      507 | same with errorx error
+BenchmarkStackTraceErrorxError100         |   300000 |     4450 | same with collected stack trace
+BenchmarkStackTraceNaiveError100-8         	   | 2000 |	    588135 | same with naive debug.Stack() error implementation
+BenchmarkSimpleErrorPrint100              |  2000000 |      617 | simple error, 100 frames deep, format output
+BenchmarkErrorxErrorPrint100              |  2000000 |      935 | same with errorx error
+BenchmarkStackTraceErrorxErrorPrint100    |    30000 |    58965 | same with collected stack trace
+BenchmarkStackTraceNaiveErrorPrint100-8    	   | 2000 |	    599155 | same with naive debug.Stack() error implementation
 
 Key takeaways:
  * With deep enough call stack, trace capture brings **10x slowdown**

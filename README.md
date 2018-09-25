@@ -150,7 +150,7 @@ Other relevant tools include ```EnsureStackTrace(err)``` to provide an error of 
 
 As performance is obviously an issue, some measurements are in order. The benchmark is provided with the library. In all of benchmark cases, a very simple code is called that does nothing but grows a number of frames and immediately returns an error.
 
-Result sample (add hardware!):
+Result sample, MacBook Pro Intel Core i7-6920HQ CPU @ 2.90GHz 4 core:
 
 name | runs | ns/op | note
 ------ | ------ | ------ | ------

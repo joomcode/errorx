@@ -36,7 +36,7 @@ An *errorx* library makes an approach to create a toolset that would help remedy
 
 As a result, the goal of the library is to provide a brief, expressive syntax for a conventional error handling and to discourage usage patterns that bring more harm than they're worth.
 
-Error-related, negative codepath is typically less well tested, though of, and may confuse the reader more than its positive counterpart. Therefore, an error system could do well without too much of a flexibility and unpredictability
+Error-related, negative codepath is typically less well tested, though of, and may confuse the reader more than its positive counterpart. Therefore, an error system could do well without too much of a flexibility and unpredictability.
 
 # errorx
 
@@ -145,6 +145,35 @@ ErrInvalidToken    = AuthErrors.NewType("invalid_token").ApplyModifiers(errorx.T
 This way, a receiver of an error always treats it the same way, and it is the producer who modifies the behaviour. Following, again, the principle of opacity.
 
 Other relevant tools include ```EnsureStackTrace(err)``` to provide an error of unknown nature with a stack trace, if it lacks one.
+
+### Stack traces benchmark
+
+As performance is obviously an issue, some measurements are in order. The benchmark is provided with the library. In all of benchmark cases, a very simple code is called that does nothing but grows a number of frames and immediately returns an error.
+
+Result sample (add hardware!):
+| name | runs | ns/op | note |
+| ------ | ------ | ------ | ------ |
+BenchmarkSimpleError10                    | 20000000 |     57.2 | simple error, 10 frames deep |
+BenchmarkErrorxError10                    | 10000000 |      138 | same with errorx error |
+BenchmarkStackTraceErrorxError10          |  1000000 |     1601 | same with collected stack trace |
+BenchmarkSimpleError100                   |  3000000 |      421 | simple error, 100 frames deep |
+BenchmarkErrorxError100                   |  3000000 |      507 | same with errorx error |
+BenchmarkStackTraceErrorxError100         |   300000 |     4450 | same with collected stack trace |
+BenchmarkStackTraceNaiveError100-8         	   | 2000 |	    588135 | same with naive debug.Stack() error implementation |
+BenchmarkSimpleErrorPrint100              |  2000000 |      617 | simple error, 100 frames deep, format output |
+BenchmarkErrorxErrorPrint100              |  2000000 |      935 | same with errorx error |
+BenchmarkStackTraceErrorxErrorPrint100    |    30000 |    58965 | same with collected stack trace |
+BenchmarkStackTraceNaiveErrorPrint100-8    	   | 2000 |	    599155 | same with naive debug.Stack() error implementation |
+
+Key takeaways:
+ * With deep enough call stack, trace capture brings **10x slowdown**
+ * This is an absolute **worst case measurement, no-op function**; in a real life, much more time is spent doing actual work
+ * Then again, in real life code invocation does not always result in error, so the overhead is proportional to the % of error returns
+ * Still, is pays to omit stack trace collection when it would be of no use
+ * It is actually **much more expensive to format** an error with a stack trace than to create it, roughly **another 10x**
+ * Compared to the most naive approach to stack trace collection, it is **100x** cheaper to do it via errorx
+ * Therefore, it is totally OK to create an error with a stack trace that would then be handled and not printed to log
+ * Realistically, stack trace overhead is only painful either if a code is very hot (called a lot and returns errors often) or if an error is used as a control flow mechanism and does not constitute an actual problem; in both cases, stack trace should be omitted
 
 ## More
 

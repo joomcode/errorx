@@ -170,7 +170,7 @@ Key takeaways:
  * With deep enough call stack, trace capture brings **10x slowdown**
  * This is an absolute **worst case measurement, no-op function**; in a real life, much more time is spent doing actual work
  * Then again, in real life code invocation does not always result in error, so the overhead is proportional to the % of error returns
- * Still, is pays to omit stack trace collection when it would be of no use
+ * Still, it pays to omit stack trace collection when it would be of no use
  * It is actually **much more expensive to format** an error with a stack trace than to create it, roughly **another 10x**
  * Compared to the most naive approach to stack trace collection, it is **100x** cheaper to do it via errorx
  * Therefore, it is totally OK to create an error with a stack trace that would then be handled and not printed to log

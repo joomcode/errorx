@@ -119,7 +119,7 @@ type naiveError struct {
 }
 
 func (err naiveError) Error() string {
-	return fmt.Sprintf("benchmark\n%s", string(err.stack))
+	return fmt.Sprintf("benchmark\n%s", err.stack)
 }
 
 func createNaiveError() error {
@@ -182,6 +182,7 @@ func (sinkError) Error() string {
 	return ""
 }
 
+// Perform error formatting and consume the result to disallow optimizations against output
 func emulateErrorPrint(err error) {
 	output := fmt.Sprintf("%+v", err)
 	if len(output) > 10000 && output[1000:1004] == "DOOM" {
@@ -189,12 +190,14 @@ func emulateErrorPrint(err error) {
 	}
 }
 
+// Consume error with a possible side effect to disallow optimizations against err
 func consumeResult(err error) {
 	if e, ok := err.(sinkError); ok && e.value == 1 {
 		panic("this was not supposed to happen")
 	}
 }
 
+// A public function to discourage optimizations against errorSink variable
 func ExportSink() error {
 	return errorSink
 }

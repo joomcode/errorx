@@ -172,7 +172,7 @@ Key takeaways:
  * Then again, in real life code invocation does not always result in error, so the overhead is proportional to the % of error returns
  * Still, it pays to omit stack trace collection when it would be of no use
  * It is actually **much more expensive to format** an error with a stack trace than to create it, roughly **another 10x**
- * Compared to the most naive approach to stack trace collection, it is **100x** cheaper to do it via errorx
+ * Compared to the most naive approach to stack trace collection, error creation it is **100x** cheaper with errorx
  * Therefore, it is totally OK to create an error with a stack trace that would then be handled and not printed to log
  * Realistically, stack trace overhead is only painful either if a code is very hot (called a lot and returns errors often) or if an error is used as a control flow mechanism and does not constitute an actual problem; in both cases, stack trace should be omitted
 

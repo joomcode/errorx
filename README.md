@@ -153,7 +153,7 @@ As performance is obviously an issue, some measurements are in order. The benchm
 Result sample, MacBook Pro Intel Core i7-6920HQ CPU @ 2.90GHz 4 core:
 
 name | runs | ns/op | note
------- | ------ | ------ | ------
+------ | ------: | ------: | ------
 BenchmarkSimpleError10                    | 20000000 |     57.2 | simple error, 10 frames deep
 BenchmarkErrorxError10                    | 10000000 |      138 | same with errorx error
 BenchmarkStackTraceErrorxError10          |  1000000 |     1601 | same with collected stack trace

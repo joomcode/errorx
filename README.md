@@ -1,3 +1,12 @@
+## Highlights
+
+The *errorx* library provides error implementation and error-related utilities. 
+Library features include (but are not limited to):
+* Stack traces 
+* Composability of errors
+* Means to enhance error both with stack trace and with message
+* Robust type and trait checks
+
 ## Introduction
 
 Conventional approach towards errors in *Go* is quite limited.
@@ -7,7 +16,7 @@ The typical case implies an error being created at some point:
 return errors.New("now this is unfortunate")
 ```
 
-Then being handled with a no-brainer:
+Then being passed along with a no-brainer:
 ```go
 if err != nil {
   return err

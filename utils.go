@@ -1,6 +1,6 @@
 package errorx
 
-// Attempts to cast an error to errorx Type, returns nil if cast has failed
+// Cast attempts to cast an error to errorx Type, returns nil if cast has failed.
 func Cast(err error) *Error {
 	if e, ok := err.(*Error); ok && e != nil {
 		return e
@@ -9,8 +9,8 @@ func Cast(err error) *Error {
 	return nil
 }
 
-// Returns nil if an error is of one of the provided types, returns the provided error otherwise
-// May be used if a particular error signifies a mark in control flow rather than an error to be reported to the caller
+// Ignore returns nil if an error is of one of the provided types, returns the provided error otherwise.
+// May be used if a particular error signifies a mark in control flow rather than an error to be reported to the caller.
 func Ignore(err error, types ...*Type) error {
 	if e := Cast(err); e != nil {
 		for _, t := range types {
@@ -23,8 +23,8 @@ func Ignore(err error, types ...*Type) error {
 	return err
 }
 
-// Returns nil if an error has one of the provided traits, returns the provided error otherwise
-// May be used if a particular error trait signifies a mark in control flow rather than an error to be reported to the caller
+// IgnoreWithTrait returns nil if an error has one of the provided traits, returns the provided error otherwise.
+// May be used if a particular error trait signifies a mark in control flow rather than an error to be reported to the caller.
 func IgnoreWithTrait(err error, traits ...Trait) error {
 	if e := Cast(err); e != nil {
 		for _, t := range traits {
@@ -37,8 +37,8 @@ func IgnoreWithTrait(err error, traits ...Trait) error {
 	return err
 }
 
-// Returns the full type name if an error; returns an empty string for non-errorx error
-// For decorated errors, the type of an original cause is used
+// GetTypeName returns the full type name if an error; returns an empty string for non-errorx error.
+// For decorated errors, the type of an original cause is used.
 func GetTypeName(err error) string {
 	if e := Cast(err); e != nil {
 		t := e.Type()
@@ -50,8 +50,8 @@ func GetTypeName(err error) string {
 	return ""
 }
 
-// A utility function to duplicate error N times
-// May be handy do demultiplex a single original error to a number of callers/requests
+// ReplicateError is a utility function to duplicate error N times.
+// May be handy do demultiplex a single original error to a number of callers/requests.
 func ReplicateError(err error, count int) []error {
 	result := make([]error, count)
 	for i := range result {

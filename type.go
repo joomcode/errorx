@@ -4,10 +4,10 @@ import (
 	"encoding"
 )
 
-// A distinct error type
-// Belongs to a namespace, may be a descendant of another type in the same namespace
-// May contain or inherit modifiers that alter the default properties for any error of this type
-// May contain or inherit traits that all errors of this type will possess
+// Type is a distinct error type.
+// Belongs to a namespace, may be a descendant of another type in the same namespace.
+// May contain or inherit modifiers that alter the default properties for any error of this type.
+// May contain or inherit traits that all errors of this type will possess.
 type Type struct {
 	namespace Namespace
 	parent    *Type
@@ -19,43 +19,43 @@ type Type struct {
 
 var _ encoding.TextMarshaler = (*Type)(nil)
 
-// Defines a new distinct type within a namespace
+// NewType defines a new distinct type within a namespace.
 func NewType(namespace Namespace, name string, traits ...Trait) *Type {
 	return newType(namespace, nil, name, traits...)
 }
 
-// Defines a new subtype within a namespace of a parent type
+// NewSubtype defines a new subtype within a namespace of a parent type.
 func (t *Type) NewSubtype(name string, traits ...Trait) *Type {
 	return newType(t.namespace, t, name, traits...)
 }
 
-// One-time modification of defaults in error creation
+// ApplyModifiers makes a one-time modification of defaults in error creation.
 func (t *Type) ApplyModifiers(modifiers ...TypeModifier) *Type {
 	t.modifiers = t.modifiers.ReplaceWith(newTypeModifiers(modifiers...))
 	return t
 }
 
-// Create an error of this type with a message
-// Without args, leaves the original message intact, so a message may be generated or provided externally
-// With args, a formatting is performed, and it is therefore expected a format string to be constant
+// New creates an error of this type with a message.
+// Without args, leaves the original message intact, so a message may be generated or provided externally.
+// With args, a formatting is performed, and it is therefore expected a format string to be constant.
 func (t *Type) New(message string, args ...interface{}) *Error {
 	return NewErrorBuilder(t).
 		WithConditionallyFormattedMessage(message, args...).
 		Create()
 }
 
-// Create an error of this type without any message
-// May be used when other information is sufficient, such as error type and stack trace
+// NewWithNoMessage creates an error of this type without any message.
+// May be used when other information is sufficient, such as error type and stack trace.
 func (t *Type) NewWithNoMessage() *Error {
 	return NewErrorBuilder(t).
 		Create()
 }
 
-// Create an error of this type with another as original cause
-// As far as type checks are concerned, this error is the only one visible, with original present only in error message
-// The original error will, however, pass its dynamic properties
-// Without args, leaves the original message intact, so a message may be generated or provided externally
-// With args, a formatting is performed, and it is therefore expected a format string to be constant
+// Wrap creates an error of this type with another as original cause.
+// As far as type checks are concerned, this error is the only one visible, with original present only in error message.
+// The original error will, however, pass its dynamic properties.
+// Without args, leaves the original message intact, so a message may be generated or provided externally.
+// With args, a formatting is performed, and it is therefore expected a format string to be constant.
 func (t *Type) Wrap(err error, message string, args ...interface{}) *Error {
 	return NewErrorBuilder(t).
 		WithConditionallyFormattedMessage(message, args...).
@@ -63,18 +63,18 @@ func (t *Type) Wrap(err error, message string, args ...interface{}) *Error {
 		Create()
 }
 
-// Create an error of this type with another as original cause and with no additional message
-// May be used when other information is sufficient, such as error type, cause and its stack trace and message
-// As far as type checks are concerned, this error is the only one visible, with original visible only in error message
-// The original error will, however, pass its dynamic properties
+// WrapWithNoMessage creates an error of this type with another as original cause and with no additional message.
+// May be used when other information is sufficient, such as error type, cause and its stack trace and message.
+// As far as type checks are concerned, this error is the only one visible, with original visible only in error message.
+// The original error will, however, pass its dynamic properties.
 func (t *Type) WrapWithNoMessage(err error) *Error {
 	return NewErrorBuilder(t).
 		WithCause(err).
 		Create()
 }
 
-// Type check for errors
-// Returns true either both are exactly the same type, or if the same is true for one of current type's ancestors
+// IsOfType is a type check for error.
+// Returns true either both are exactly the same type, or if the same is true for one of current type's ancestors.
 func (t *Type) IsOfType(other *Type) bool {
 	current := t
 	for current != nil {
@@ -88,25 +88,25 @@ func (t *Type) IsOfType(other *Type) bool {
 	return false
 }
 
-// Type check for errors
-// Returns true either both are exactly the same type, or if the same is true for one of current type's ancestors
-// For an error that does not have an errorx type, returns false
+// IsOfType is a type check for errors.
+// Returns true either both are exactly the same type, or if the same is true for one of current type's ancestors.
+// For an error that does not have an errorx type, returns false.
 func IsOfType(err error, t *Type) bool {
 	e := Cast(err)
 	return e != nil && e.IsOfType(t)
 }
 
-// A parent type, if present
+// Supertype returns a parent type, if present.
 func (t *Type) Supertype() *Type {
 	return t.parent
 }
 
-// A fully qualified name if type, is not presumed to be unique, see TypeSubscriber
+// FullName returns a fully qualified name if type, is not presumed to be unique, see TypeSubscriber.
 func (t *Type) FullName() string {
 	return t.fullName
 }
 
-// A base namespace this type belongs to
+// RootNamespace returns a base namespace this type belongs to.
 func (t *Type) RootNamespace() Namespace {
 	return t.namespace
 }

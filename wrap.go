@@ -1,7 +1,7 @@
 package errorx
 
 var (
-	// most errors from this namespace are made private in order to disallow and direct type checks in the user code
+	// Most errors from this namespace are made private in order to disallow and direct type checks in the user code
 	syntheticErrors = NewNamespace("synthetic")
 
 	// Private error type for non-errors errors, used as a not-nil substitute that cannot be type-checked directly
@@ -14,10 +14,10 @@ var (
 	stackTraceWrapper = syntheticErrors.NewType("stacktrace").ApplyModifiers(TypeModifierTransparent)
 )
 
-// Pass some text info along with a message, leaving its semantics totally intact
-// An perceived type, traits and properties if the resulting error are those of the original
-// Without args, leaves the provided message intact, so a message may be generated or provided externally
-// With args, a formatting is performed, and it is therefore expected a format string to be constant
+// Decorate allows to pass some text info along with a message, leaving its semantics totally intact.
+// An perceived type, traits and properties if the resulting error are those of the original.
+// Without args, leaves the provided message intact, so a message may be generated or provided externally.
+// With args, a formatting is performed, and it is therefore expected a format string to be constant.
 func Decorate(err error, message string, args ...interface{}) *Error {
 	return NewErrorBuilder(transparentWrapper).
 		WithConditionallyFormattedMessage(message, args...).
@@ -26,9 +26,10 @@ func Decorate(err error, message string, args ...interface{}) *Error {
 		Create()
 }
 
-// Has all the properties of the Decorate() method and additionally extends the stack trace of the original message
-// Designed to be used when a original error is passed from another goroutine rather than from a direct method call
-// If, however, is it is call in the same goroutine, formatter makes some moderated effort to remove duplication
+// EnhanceStackTrace has all the properties of the Decorate() method
+// and additionally extends the stack trace of the original message.
+// Designed to be used when a original error is passed from another goroutine rather than from a direct method call.
+// If, however, is it is call in the same goroutine, formatter makes some moderated effort to remove duplication.
 func EnhanceStackTrace(err error, message string, args ...interface{}) *Error {
 	return NewErrorBuilder(transparentWrapper).
 		WithConditionallyFormattedMessage(message, args...).
@@ -38,9 +39,9 @@ func EnhanceStackTrace(err error, message string, args ...interface{}) *Error {
 		Create()
 }
 
-// Utility to ensure the stack trace is captured in provided error
-// If this is already true, it is returned unmodified
-// Otherwise, it is decorated with stack trace
+// EnsureStackTrace is a utility to ensure the stack trace is captured in provided error.
+// If this is already true, it is returned unmodified.
+// Otherwise, it is decorated with stack trace.
 func EnsureStackTrace(err error) *Error {
 	if typedErr := Cast(err); typedErr != nil && typedErr.stackTrace != nil {
 		return typedErr
@@ -54,10 +55,10 @@ func EnsureStackTrace(err error) *Error {
 		Create()
 }
 
-// Transparent wrap of multiple errors with additional message
-// If there are no errors, or all errors are nil, returns nil
-// If all errors are of the same type (for example, if there is only one), wraps them transparently
-// Otherwise, an opaque wrap is performed, that is, IsOfType checks will fail on underlying error types
+// DecorateMany performs a transparent wrap of multiple errors with additional message.
+// If there are no errors, or all errors are nil, returns nil.
+// If all errors are of the same type (for example, if there is only one), wraps them transparently.
+// Otherwise, an opaque wrap is performed, that is, IsOfType checks will fail on underlying error types.
 func DecorateMany(message string, errs ...error) error {
 	errs = ignoreEmpty(errs)
 	if len(errs) == 0 {
@@ -71,9 +72,9 @@ func DecorateMany(message string, errs ...error) error {
 	}
 }
 
-// Utility to wrap multiple errors
-// If there are no errors, or all errors are nil, returns nil
-// Otherwise, the fist error is treated as an original cause, others are added as underlying
+// WrapMany is a utility to wrap multiple errors.
+// If there are no errors, or all errors are nil, returns nil.
+// Otherwise, the fist error is treated as an original cause, others are added as underlying.
 func WrapMany(errorType *Type, message string, errs ...error) error {
 	errs = ignoreEmpty(errs)
 	if len(errs) == 0 {

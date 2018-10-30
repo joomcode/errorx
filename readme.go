@@ -1,6 +1,6 @@
 // Package errorx provides error implementation and error-related utilities.
 //
-// Conventional approach towards errors in *Go* is quite limited.
+// Conventional approach towards errors in Go is quite limited.
 // The typical case implies an error being created at some point:
 //
 // 		return errors.New("now this is unfortunate")

@@ -1,9 +1,9 @@
 package errorx
 
-// Modifier is a way to change a default behaviour for an error type, directly or via type hierarchy
-// Modification is intentionally one-way, as it provides much more clarity
-// If there is a modifier on a type or a namespace, all its descendants definitely have the same default behaviour
-// If some of a subtypes must lack a specific modifier, then the modifier must be removed from the common ancestor
+// Modifier is a way to change a default behaviour for an error type, directly or via type hierarchy.
+// Modification is intentionally one-way, as it provides much more clarity.
+// If there is a modifier on a type or a namespace, all its descendants definitely have the same default behaviour.
+// If some of a subtypes must lack a specific modifier, then the modifier must be removed from the common ancestor.
 type TypeModifier int
 
 const (

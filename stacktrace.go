@@ -12,13 +12,13 @@ import (
 // A used defined transformer for file path in stack trace output
 type StackTraceFilePathTransformer func(string) string
 
-// Provide a transformer to be used in formatting of all the errors
-// It is OK to leave it alone, stack trace will retain its exact original information
-// This feature may be beneficial, however, if a shortening of file path will make it more convenient to use
-// One of such examples is to transform a project-related path from absolute to relative and thus more IDE-friendly
+// InitializeStackTraceTransformer provides a transformer to be used in formatting of all the errors.
+// It is OK to leave it alone, stack trace will retain its exact original information.
+// This feature may be beneficial, however, if a shortening of file path will make it more convenient to use.
+// One of such examples is to transform a project-related path from absolute to relative and thus more IDE-friendly.
 //
-// NB: error is returned if a transformer was already registered
-// Transformer is changed nonetheless, the old one is returned along with an error
+// NB: error is returned if a transformer was already registered.
+// Transformer is changed nonetheless, the old one is returned along with an error.
 // User is at liberty to either ignore it, panic, reinstate the old transformer etc.
 func InitializeStackTraceTransformer(transformer StackTraceFilePathTransformer) (StackTraceFilePathTransformer, error) {
 	stackTraceTransformer.mu.Lock()

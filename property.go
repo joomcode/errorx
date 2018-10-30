@@ -4,36 +4,36 @@ import (
 	"context"
 )
 
-// Key to a dynamic property of an error
-// Property value belongs to an error instance only, never inherited from a type
-// Property visibility is hindered by Wrap, preserved by Decorate
+// Property is a key to a dynamic property of an error.
+// Property value belongs to an error instance only, never inherited from a type.
+// Property visibility is hindered by Wrap, preserved by Decorate.
 type Property struct {
 	id    int64
 	label string
 }
 
-// Register a new property key
-// It is used both to add a dynamic property to an error instance, and to extract property value back from error
+// RegisterProperty registers a new property key.
+// It is used both to add a dynamic property to an error instance, and to extract property value back from error.
 func RegisterProperty(label string) Property {
 	return newProperty(label)
 }
 
-// Context property, value is expected to be of context.Context type
+// Context property, value is expected to be of context.Context type.
 func PropertyContext() Property {
 	return propertyContext
 }
 
-// Payload property, value may contain user defined structure with arbitrary data passed along with an error
+// Payload property, value may contain user defined structure with arbitrary data passed along with an error.
 func PropertyPayload() Property {
 	return propertyPayload
 }
 
-// A statically typed helper to add a context property to an error
+// WithContext is a statically typed helper to add a context property to an error.
 func WithContext(err *Error, ctx context.Context) *Error {
 	return err.WithProperty(PropertyContext(), ctx)
 }
 
-// A statically typed helper to extract a context property from an error
+// ExtractContext is a statically typed helper to extract a context property from an error.
 func ExtractContext(err error) (context.Context, bool) {
 	rawCtx, ok := ExtractProperty(err, PropertyContext())
 	if !ok {
@@ -43,18 +43,18 @@ func ExtractContext(err error) (context.Context, bool) {
 	return rawCtx.(context.Context), true
 }
 
-// A helper to add a payload property to an error
+// WithPayload is a helper to add a payload property to an error.
 func WithPayload(err *Error, payload interface{}) *Error {
 	return err.WithProperty(PropertyPayload(), payload)
 }
 
-// Helper to add a payload property to an error
+// ExtractPayload is a helper to extract a payload property from an error.
 func ExtractPayload(err error) (interface{}, bool) {
 	return ExtractProperty(err, PropertyPayload())
 }
 
-// Attempt to extract a property value by a provided key
-// A property may belong to this error, or be extracted from the original cause
+// ExtractProperty attempts to extract a property value by a provided key.
+// A property may belong to this error, or be extracted from the original cause.
 func ExtractProperty(err error, key Property) (interface{}, bool) {
 	typedErr := Cast(err)
 	if typedErr == nil {

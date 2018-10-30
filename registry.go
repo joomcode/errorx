@@ -2,9 +2,9 @@ package errorx
 
 import "sync"
 
-// An interface to receive callbacks on the registered error namespaces and types
-// This may be used to create a user-defined registry, for example, to check if all type names are unique
-// ISSUE: if .ApplyModifiers is called for a type/namespace, callback still receives a value without those modifiers
+// TypeSubscriber is an interface to receive callbacks on the registered error namespaces and types.
+// This may be used to create a user-defined registry, for example, to check if all type names are unique.
+// ISSUE: if .ApplyModifiers is called for a type/namespace, callback still receives a value without those modifiers.
 type TypeSubscriber interface {
 	// Method is called exactly once for each namespace
 	OnNamespaceCreated(namespace Namespace)
@@ -12,9 +12,9 @@ type TypeSubscriber interface {
 	OnTypeCreated(t *Type)
 }
 
-// Add a new TypeSubscriber
-// A subscriber is guaranteed to receive callbacks for all namespaces and types
-// If a type is already registered at the moment of subscription, a callback for this type is called immediately
+// RegisterTypeSubscriber adds a new TypeSubscriber.
+// A subscriber is guaranteed to receive callbacks for all namespaces and types.
+// If a type is already registered at the moment of subscription, a callback for this type is called immediately.
 func RegisterTypeSubscriber(s TypeSubscriber) {
 	globalRegistry.registerTypeSubscriber(s)
 }

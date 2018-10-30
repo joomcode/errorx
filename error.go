@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// Error is an instance of error object,
+// Error is an instance of error object.
 // At the moment of creation, Error collects information based on context, creation modifiers and type it belongs to.
 // Error is mostly immutable, and distinct errors composition is achieved through wrap.
 type Error struct {

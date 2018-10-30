@@ -1,9 +1,9 @@
 package errorx
 
 var (
-	// General purpose errors to be used universally
-	// These errors should typically be used in opaque manner, implying no handing in user code
-	// When handling is required, it is best to use custom error types with both standard and custom traits
+	// General purpose errors to be used universally.
+	// These errors should typically be used in opaque manner, implying no handing in user code.
+	// When handling is required, it is best to use custom error types with both standard and custom traits.
 	CommonErrors = NewNamespace("common")
 
 	IllegalArgument      = CommonErrors.NewType("illegal_argument")

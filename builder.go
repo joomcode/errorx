@@ -17,7 +17,7 @@ type ErrorBuilder struct {
 	isTransparent bool
 }
 
-// NewErrorBuilder created error builder from an existing error type
+// NewErrorBuilder creates error builder from an existing error type.
 func NewErrorBuilder(t *Type) *ErrorBuilder {
 	getMode := func() callStackBuildMode {
 		if t.modifiers.CollectStackTrace() {
@@ -92,7 +92,7 @@ func (eb *ErrorBuilder) WithConditionallyFormattedMessage(message string, args .
 	return eb
 }
 
-// Create returns an error with specified params
+// Create returns an error with specified params.
 func (eb *ErrorBuilder) Create() *Error {
 	return &Error{
 		errorType:   eb.errorType,

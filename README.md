@@ -28,7 +28,7 @@ And, finally, handled by printing it to the log file:
 log.Errorf("Error: %s", err)
 ```
 
-It doesn't take long to find out that this is not often enough. There's little fun in solving the issue when everything a developer is able to observe is a line in the log that looks like on of those:
+It doesn't take long to find out that quite often this is not enough. There's little fun in solving the issue when everything a developer is able to observe is a line in the log that looks like on of those:
 > Error: EOF
 
 > Error: unexpected '>' at the beginning of value

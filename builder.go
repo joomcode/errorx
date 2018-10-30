@@ -5,9 +5,9 @@ import (
 	"strconv"
 )
 
-// Utility to compose an error from type
-// Typically, a direct usage is not required: either Type methods of helpers like Decorate is sufficient
-// Only use builder if no neater alternative is available
+// ErrorBuilder is a utility to compose an error from type.
+// Typically, a direct usage is not required: either Type methods of helpers like Decorate is sufficient.
+// Only use builder if no neater alternative is available.
 type ErrorBuilder struct {
 	errorType     *Type
 	message       string
@@ -17,7 +17,7 @@ type ErrorBuilder struct {
 	isTransparent bool
 }
 
-// Created error builder from an existing error type
+// NewErrorBuilder created error builder from an existing error type
 func NewErrorBuilder(t *Type) *ErrorBuilder {
 	getMode := func() callStackBuildMode {
 		if t.modifiers.CollectStackTrace() {
@@ -34,10 +34,10 @@ func NewErrorBuilder(t *Type) *ErrorBuilder {
 	}
 }
 
-// Provide an original cause for error
-// For non-errorx errors, a stack trace is collected
-// Otherwise, it is inherited by default, as error wrapping is typically performed 'en passe'
-// Note that even if an original error explicitly omitted the stack trace, it could be added on wrap
+// WithCause provides an original cause for error.
+// For non-errorx errors, a stack trace is collected.
+// Otherwise, it is inherited by default, as error wrapping is typically performed 'en passe'.
+// Note that even if an original error explicitly omitted the stack trace, it could be added on wrap.
 func (eb *ErrorBuilder) WithCause(err error) *ErrorBuilder {
 	eb.cause = err
 	if Cast(err) != nil {
@@ -47,9 +47,10 @@ func (eb *ErrorBuilder) WithCause(err error) *ErrorBuilder {
 	return eb
 }
 
-// Transparent wrap hides the current error type from the type checks and exposes the error type of the cause instead
-// The same holds true for traits, and the dynamic properties are visible from both cause and transparent wrapper
-// Note that if the cause error is non-errorx, transparency will still hold, type check against wrapper will still fail
+// Transparent makes a wrap transparent rather than opaque (default).
+// Transparent wrap hides the current error type from the type checks and exposes the error type of the cause instead.
+// The same holds true for traits, and the dynamic properties are visible from both cause and transparent wrapper.
+// Note that if the cause error is non-errorx, transparency will still hold, type check against wrapper will still fail.
 func (eb *ErrorBuilder) Transparent() *ErrorBuilder {
 	if eb.cause == nil {
 		panic("wrong builder usage: wrap modifier without non-nil cause")
@@ -59,11 +60,11 @@ func (eb *ErrorBuilder) Transparent() *ErrorBuilder {
 	return eb
 }
 
-// Collect the current stack trace along with the original one, and use both in formatting
-// If the original error does not hold a stack trace for whatever reason, it will be collected it this point
-// This is typically a way to handle an error received from another goroutine - say, a worker pool
+// EnhanceStackTrace is a signal to collect the current stack trace along with the original one, and use both in formatting.
+// If the original error does not hold a stack trace for whatever reason, it will be collected it this point.
+// This is typically a way to handle an error received from another goroutine - say, a worker pool.
 // When stack traces overlap, formatting makes a conservative attempt not to repeat itself,
-// preserving the *original* stack trace in its entirety
+// preserving the *original* stack trace in its entirety.
 func (eb *ErrorBuilder) EnhanceStackTrace() *ErrorBuilder {
 	if eb.cause == nil {
 		panic("wrong builder usage: wrap modifier without non-nil cause")
@@ -78,16 +79,9 @@ func (eb *ErrorBuilder) EnhanceStackTrace() *ErrorBuilder {
 	return eb
 }
 
-// Adds multiple additional (hidden, suppressed) related errors to be used exclusively in error output
-// Note that these errors make no other effect whatsoever: their traits, types, properties etc. are lost
-func (eb *ErrorBuilder) withUnderlyingErrors(errs ...error) *ErrorBuilder {
-	eb.underlying = append(eb.underlying, errs...)
-	return eb
-}
-
-// Provides a message for an error in flexible format, to simplify its usages
-// Without args, leaves the original message intact, so a message may be generated or provided externally
-// With args, a formatting is performed, and it is therefore expected a format string to be constant
+// WithConditionallyFormattedMessage provides a message for an error in flexible format, to simplify its usages.
+// Without args, leaves the original message intact, so a message may be generated or provided externally.
+// With args, a formatting is performed, and it is therefore expected a format string to be constant.
 func (eb *ErrorBuilder) WithConditionallyFormattedMessage(message string, args ...interface{}) *ErrorBuilder {
 	if len(args) == 0 {
 		eb.message = message
@@ -98,7 +92,7 @@ func (eb *ErrorBuilder) WithConditionallyFormattedMessage(message string, args .
 	return eb
 }
 
-// Returns an error with specified params
+// Create returns an error with specified params
 func (eb *ErrorBuilder) Create() *Error {
 	return &Error{
 		errorType:   eb.errorType,

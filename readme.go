@@ -15,7 +15,7 @@
 //
 // 		log.Errorf("Error: %s", err)
 //
-// This approach is simple, but it is often not enough.
+// This approach is simple, but quite often it is not enough.
 // There is a need to add context information to error, to check or hide its properties.
 // If all else fails, it pays to have a stack trace printed along with error text.
 //

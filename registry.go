@@ -6,9 +6,9 @@ import "sync"
 // This may be used to create a user-defined registry, for example, to check if all type names are unique.
 // ISSUE: if .ApplyModifiers is called for a type/namespace, callback still receives a value without those modifiers.
 type TypeSubscriber interface {
-	// Method is called exactly once for each namespace
+	// OnNamespaceCreated is called exactly once for each namespace
 	OnNamespaceCreated(namespace Namespace)
-	// Method is called exactly once for each type
+	// OnTypeCreated is called exactly once for each type
 	OnTypeCreated(t *Type)
 }
 

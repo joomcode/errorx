@@ -34,9 +34,9 @@
 // Here errorx.Decorate is used to add more information,
 // and syntax like errorx.IsOfType can still be used to check the original error.
 // This error also holds a stack trace captured at the point of creation.
-// With errorx syntax, any of this may be customized: stack trace omitted, error type hidden.
+// With errorx syntax, any of this may be customized: stack trace can be omitted, error type can be hidden.
 // Type can be further customized with Traits, and error with Properties.
-// Package provide a utility functions to compose, switch over, check, and ignore errors based on their types and properties.
+// Package provides utility functions to compose, switch over, check, and ignore errors based on their types and properties.
 //
 // See documentation for Error, Type and Namespace for more details.
 package errorx

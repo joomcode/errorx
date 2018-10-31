@@ -142,7 +142,12 @@ func (e *Error) Cause() error {
 }
 
 // Format implements the Formatter interface.
-// Supports %v or %s for simple message output, and %+v for full output complete with a stack trace.
+// Supported verbs:
+//
+// 		%s		simple message output
+// 		%v 		same as %s
+// 		%+v 	full output complete with a stack trace
+//
 // In is nearly always preferable to use %+v format.
 // If a stack trace is not required, it should be omitted at the moment of creation rather in formatting.
 func (e *Error) Format(s fmt.State, verb rune) {

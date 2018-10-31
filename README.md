@@ -25,7 +25,7 @@ if err != nil {
 
 And, finally, handled by printing it to the log file:
 ```go
-log.Errorf("Error: %s", err)
+log.Printf("Error: %s", err)
 ```
 
 It doesn't take long to find out that quite often this is not enough. There's little fun in solving the issue when everything a developer is able to observe is a line in the log that looks like on of those:
@@ -60,7 +60,7 @@ if err != nil {
 }
 ```
 ```go
-log.Errorf("Error: %+v", err)
+log.Printf("Error: %+v", err)
 ```
 
 An error message will look something like this:

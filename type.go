@@ -53,7 +53,7 @@ func (t *Type) NewWithNoMessage() *Error {
 
 // Wrap creates an error of this type with another as original cause.
 // As far as type checks are concerned, this error is the only one visible, with original present only in error message.
-// The original error will, however, pass its dynamic properties.
+// The original error will not pass its dynamic properties, and those are accessible only via direct walk over Cause() chain.
 // Without args, leaves the original message intact, so a message may be generated or provided externally.
 // With args, a formatting is performed, and it is therefore expected a format string to be constant.
 func (t *Type) Wrap(err error, message string, args ...interface{}) *Error {

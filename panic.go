@@ -13,9 +13,11 @@ import "fmt"
 // as panics must not be a way to report conventional errors and are therefore rare.
 // With this in mind, it is better to err on the side of completeness rather than brevity.
 //
-// This function never returns, but the signature may be convenient, i.e.:
-// * return nil, errorx.Panic(err)
-// * panic(errorx.Panic(err))
+// This function never returns, but the signature may be used for convenience:
+//
+// 		return nil, errorx.Panic(err)
+// 		panic(errorx.Panic(err))
+//
 func Panic(err error) error {
 	panic(newPanicErrorWrapper(err))
 }

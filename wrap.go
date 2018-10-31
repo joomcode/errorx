@@ -15,7 +15,7 @@ var (
 )
 
 // Decorate allows to pass some text info along with a message, leaving its semantics totally intact.
-// An perceived type, traits and properties if the resulting error are those of the original.
+// Perceived type, traits and properties of the resulting error are those of the original.
 // Without args, leaves the provided message intact, so a message may be generated or provided externally.
 // With args, a formatting is performed, and it is therefore expected a format string to be constant.
 func Decorate(err error, message string, args ...interface{}) *Error {
@@ -27,9 +27,9 @@ func Decorate(err error, message string, args ...interface{}) *Error {
 }
 
 // EnhanceStackTrace has all the properties of the Decorate() method
-// and additionally extends the stack trace of the original message.
+// and additionally extends the stack trace of the original error.
 // Designed to be used when a original error is passed from another goroutine rather than from a direct method call.
-// If, however, is it is call in the same goroutine, formatter makes some moderated effort to remove duplication.
+// If, however, it is called in the same goroutine, formatter makes some moderated effort to remove duplication.
 func EnhanceStackTrace(err error, message string, args ...interface{}) *Error {
 	return NewErrorBuilder(transparentWrapper).
 		WithConditionallyFormattedMessage(message, args...).

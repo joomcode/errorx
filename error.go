@@ -50,7 +50,7 @@ func (e *Error) WithUnderlyingErrors(errs ...error) *Error {
 }
 
 // Property extracts a dynamic property value from an error.
-// A property may belong to this error, or be extracted from the original cause.
+// A property may belong to this error or be extracted from the original cause.
 // The transparency rules are respected to some extent: both the original cause and the transparent wrapper
 // may have accessible properties, but an opaque wrapper hides the original properties.
 func (e *Error) Property(key Property) (interface{}, bool) {
@@ -73,7 +73,7 @@ func (e *Error) Property(key Property) (interface{}, bool) {
 
 // HasTrait checks if an error possesses the expected trait.
 // Trait check works just as a type check would: opaque wrap hides the traits of the cause.
-// Traits are always a property of a type rather than of an instance, so trait check is an alternative to a type check.
+// Traits are always properties of a type rather than of an instance, so trait check is an alternative to a type check.
 // This alternative is preferable, though, as it is less brittle and generally creates less of a dependency.
 func (e *Error) HasTrait(key Trait) bool {
 	cause := e
@@ -108,6 +108,7 @@ func (e *Error) IsOfType(t *Type) bool {
 // Type returns the exact type of this error.
 // With transparent wrapping, such as in Decorate(), returns the type of the original cause.
 // The result is always not nil, even if the resulting type is impossible to successfully type check against.
+//
 // NB: the exact error type may fail an equality check where a IsOfType() check would succeed.
 // This may happen if a type is checked against one of its supertypes, for example.
 // Therefore, handle direct type checks with care or avoid it altogether and use TypeSwitch() or IsForType() instead.
@@ -135,7 +136,7 @@ func (e *Error) Message() string {
 // Cause returns the immediate (wrapped) cause of current error.
 // This method could be used to dig for root cause of the error, but it is not advised to do so.
 // Errors should not require a complex navigation through causes to be properly handled, and the need to do so is a code smell.
-// Manually extracting cause defeats features such as properties of wrap, behaviour of properties etc.
+// Manually extracting cause defeats features such as opaque wrap, behaviour of properties etc.
 // This method is, therefore, reserved for system utilities, not for general use.
 func (e *Error) Cause() error {
 	return e.cause
@@ -145,8 +146,8 @@ func (e *Error) Cause() error {
 // Supported verbs:
 //
 // 		%s		simple message output
-// 		%v 		same as %s
-// 		%+v 	full output complete with a stack trace
+// 		%v		same as %s
+// 		%+v		full output complete with a stack trace
 //
 // In is nearly always preferable to use %+v format.
 // If a stack trace is not required, it should be omitted at the moment of creation rather in formatting.

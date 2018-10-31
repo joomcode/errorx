@@ -17,7 +17,8 @@ var (
 // For error types not in the 'types' list, including non-errorx errors, NotRecognisedType() is returned.
 // It is safe to treat NotRecognisedType() as 'any other type of not-nil error' case.
 // The effect is equivalent to a series of IsOfType() checks.
-// NB: if more than one provided types matches with error, the first match in the providers list is recognised.
+//
+// NB: if more than one provided types matches the error, the first match in the providers list is recognised.
 func TypeSwitch(err error, types ...*Type) *Type {
 	typed := Cast(err)
 
@@ -42,7 +43,8 @@ func TypeSwitch(err error, types ...*Type) *Type {
 // For error types that lack any of the provided traits, including non-errorx errors, CaseNoTrait() is returned.
 // It is safe to treat CaseNoTrait() as 'any other kind of not-nil error' case.
 // The effect is equivalent to a series of HasTrait() checks.
-// NB: if more than one provided types matches with error, the first match in the providers list is recognised.
+
+// NB: if more than one provided types matches the error, the first match in the providers list is recognised.
 func TraitSwitch(err error, traits ...Trait) Trait {
 	typed := Cast(err)
 

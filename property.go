@@ -54,7 +54,7 @@ func ExtractPayload(err error) (interface{}, bool) {
 }
 
 // ExtractProperty attempts to extract a property value by a provided key.
-// A property may belong to this error, or be extracted from the original cause.
+// A property may belong to this error or be extracted from the original cause.
 func ExtractProperty(err error, key Property) (interface{}, bool) {
 	typedErr := Cast(err)
 	if typedErr == nil {

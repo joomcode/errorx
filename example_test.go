@@ -76,11 +76,11 @@ func ExampleError_Format() {
 	//
 	//Error full: common.assertion_failed: example
 	// at github.com/joomcode/errorx_test.someFunc()
-	//	/Users/p.ivanov/go/src/github.com/joomcode/errorx/example_test.go:102
+	//	/Users/username/go/src/github.com/joomcode/errorx/example_test.go:102
 	// at github.com/joomcode/errorx_test.nestedCall()
-	//	/Users/p.ivanov/go/src/github.com/joomcode/errorx/example_test.go:98
+	//	/Users/username/go/src/github.com/joomcode/errorx/example_test.go:98
 	// at github.com/joomcode/errorx_test.ExampleError_Format()
-	//	/Users/p.ivanov/go/src/github.com/joomcode/errorx/example_test.go:66
+	//	/Users/username/go/src/github.com/joomcode/errorx/example_test.go:66
 	// <...> more
 }
 
@@ -97,7 +97,7 @@ func ExampleEnhanceStackTrace() {
 	// Example output:
 	//Error full: another goroutine, cause: common.assertion_failed: example
 	// at github.com/joomcode/errorx_test.ExampleEnhanceStackTrace()
-	//	/Users/p.ivanov/go/src/github.com/joomcode/errorx/example_test.go:94
+	//	/Users/username/go/src/github.com/joomcode/errorx/example_test.go:94
 	// at testing.runExample()
 	//	/usr/local/Cellar/go/1.10.3/libexec/src/testing/example.go:122
 	// at testing.runExamples()
@@ -110,11 +110,11 @@ func ExampleEnhanceStackTrace() {
 	// (1 duplicated frames)
 	// ----------------------------------
 	// at github.com/joomcode/errorx_test.someFunc()
-	//	/Users/p.ivanov/go/src/github.com/joomcode/errorx/example_test.go:106
+	//	/Users/username/go/src/github.com/joomcode/errorx/example_test.go:106
 	// at github.com/joomcode/errorx_test.nestedCall()
-	//	/Users/p.ivanov/go/src/github.com/joomcode/errorx/example_test.go:102
+	//	/Users/username/go/src/github.com/joomcode/errorx/example_test.go:102
 	// at github.com/joomcode/errorx_test.ExampleEnhanceStackTrace.func1()
-	//	/Users/p.ivanov/go/src/github.com/joomcode/errorx/example_test.go:90
+	//	/Users/username/go/src/github.com/joomcode/errorx/example_test.go:90
 	// at runtime.goexit()
 	//	/usr/local/Cellar/go/1.10.3/libexec/src/runtime/asm_amd64.s:2361
 }

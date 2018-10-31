@@ -74,7 +74,7 @@ func (t *Type) WrapWithNoMessage(err error) *Error {
 }
 
 // IsOfType is a type check for error.
-// Returns true either both are exactly the same type, or if the same is true for one of current type's ancestors.
+// Returns true either if both are of exactly the same type, or if the same is true for one of current type's ancestors.
 func (t *Type) IsOfType(other *Type) bool {
 	current := t
 	for current != nil {
@@ -89,7 +89,7 @@ func (t *Type) IsOfType(other *Type) bool {
 }
 
 // IsOfType is a type check for errors.
-// Returns true either both are exactly the same type, or if the same is true for one of current type's ancestors.
+// Returns true either if both are of exactly the same type, or if the same is true for one of current type's ancestors.
 // For an error that does not have an errorx type, returns false.
 func IsOfType(err error, t *Type) bool {
 	e := Cast(err)

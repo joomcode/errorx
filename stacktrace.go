@@ -101,7 +101,7 @@ func (st *stackTrace) formatStackTrace(s fmt.State) {
 		return
 	}
 
-	frames := frameHelper.GetFrames(pc)
+	frames := frameHelperSingleton.GetFrames(pc)
 	for _, frame := range frames {
 		io.WriteString(s, "\n at ")
 		io.WriteString(s, frame.Function())

@@ -6,8 +6,8 @@ import (
 )
 
 // ErrorBuilder is a utility to compose an error from type.
-// Typically, a direct usage is not required: either Type methods of helpers like Decorate is sufficient.
-// Only use builder if no neater alternative is available.
+// Typically, a direct usage is not required: either Type methods of helpers like Decorate are sufficient.
+// Only use builder if no simpler alternative is available.
 type ErrorBuilder struct {
 	errorType     *Type
 	message       string

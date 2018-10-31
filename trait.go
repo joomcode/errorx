@@ -15,7 +15,7 @@ func RegisterTrait(label string) Trait {
 }
 
 // HasTrait checks if an error possesses the expected trait.
-// Traits are always a property of a type rather than of an instance, so trait check is an alternative to a type check.
+// Traits are always properties of a type rather than of an instance, so trait check is an alternative to a type check.
 // This alternative is preferable, though, as it is less brittle and generally creates less of a dependency.
 func HasTrait(err error, key Trait) bool {
 	typedErr := Cast(err)

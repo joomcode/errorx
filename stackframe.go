@@ -10,10 +10,10 @@ type frame interface {
 	Line() int
 }
 
-type FrameHelper struct {
+type frameHelper struct {
 }
 
-var frameHelper = &FrameHelper{}
+var frameHelperSingleton = &frameHelper{}
 
 type defaultFrame struct {
 	frame *runtime.Frame
@@ -31,7 +31,7 @@ func (f *defaultFrame) Line() int {
 	return f.frame.Line
 }
 
-func (c *FrameHelper) GetFrames(pcs []uintptr) []frame {
+func (c *frameHelper) GetFrames(pcs []uintptr) []frame {
 	frames := runtime.CallersFrames(pcs[:])
 	result := make([]frame, 0, len(pcs))
 

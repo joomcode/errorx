@@ -196,3 +196,5 @@ See godoc for other *errorx* features:
 * Panic-related utils
 * Type registry
 * etc.
+
+[Read the package documentation for more information](https://godoc.org/github.com/joomcode/errorx).

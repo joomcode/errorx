@@ -90,7 +90,7 @@ func ExampleEnhanceStackTrace() {
 		errCh <- nestedCall()
 	}()
 
-	err := <- errCh
+	err := <-errCh
 	verboseOutput := fmt.Sprintf("Error full: %+v", errorx.EnhanceStackTrace(err, "another goroutine"))
 	fmt.Println(verboseOutput)
 

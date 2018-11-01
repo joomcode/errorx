@@ -9,7 +9,7 @@ import (
 	"sync/atomic"
 )
 
-// A used defined transformer for file path in stack trace output
+// StackTraceFilePathTransformer is a  used defined transformer for file path in stack trace output.
 type StackTraceFilePathTransformer func(string) string
 
 // InitializeStackTraceTransformer provides a transformer to be used in formatting of all the errors.

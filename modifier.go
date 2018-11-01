@@ -1,15 +1,15 @@
 package errorx
 
-// Modifier is a way to change a default behaviour for an error type, directly or via type hierarchy.
+// TypeModifier is a way to change a default behaviour for an error type, directly or via type hierarchy.
 // Modification is intentionally one-way, as it provides much more clarity.
 // If there is a modifier on a type or a namespace, all its descendants definitely have the same default behaviour.
 // If some of a subtypes must lack a specific modifier, then the modifier must be removed from the common ancestor.
 type TypeModifier int
 
 const (
-	// An error type with such modifier creates transparent wrappers by default
+	// TypeModifierTransparent is a type modifier; an error type with such modifier creates transparent wrappers by default
 	TypeModifierTransparent TypeModifier = 1
-	// An error type with such modifier omits the stack trace collection upon creation of an error instance
+	// TypeModifierOmitStackTrace is a type modifier; an error type with such modifier omits the stack trace collection upon creation of an error instance
 	TypeModifierOmitStackTrace TypeModifier = 2
 )
 

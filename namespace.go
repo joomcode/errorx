@@ -17,7 +17,7 @@ type Namespace struct {
 	modifiers modifiers
 }
 
-// Namespace itself is not comparable, so a key be used instead.
+// NamespaceKey is a comparable descriptor of a Namespace.
 type NamespaceKey struct {
 	id   int64
 	name string

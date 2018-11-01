@@ -18,12 +18,12 @@ func RegisterProperty(label string) Property {
 	return newProperty(label)
 }
 
-// Context property, value is expected to be of context.Context type.
+// PropertyContext is a context property, value is expected to be of context.Context type.
 func PropertyContext() Property {
 	return propertyContext
 }
 
-// Payload property, value may contain user defined structure with arbitrary data passed along with an error.
+// PropertyPayload is a payload property, value may contain user defined structure with arbitrary data passed along with an error.
 func PropertyPayload() Property {
 	return propertyPayload
 }

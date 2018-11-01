@@ -26,16 +26,16 @@ func HasTrait(err error, key Trait) bool {
 	return typedErr.HasTrait(key)
 }
 
-// A trait that signifies that an error is temporary in nature.
+// Temporary is a trait that signifies that an error is temporary in nature.
 func Temporary() Trait { return traitTemporary }
 
-// A trait that signifies that an error is some sort iof timeout.
+// Timeout is a trait that signifies that an error is some sort iof timeout.
 func Timeout() Trait { return traitTimeout }
 
-// A trait that marks such an error where the requested object is not found.
+// NotFound is a trait that marks such an error where the requested object is not found.
 func NotFound() Trait { return traitNotFound }
 
-// A trait that marks such an error where an update is failed as a duplicate.
+// Duplicate is a trait that marks such an error where an update is failed as a duplicate.
 func Duplicate() Trait { return traitDuplicate }
 
 // IsTemporary checks for Temporary trait.

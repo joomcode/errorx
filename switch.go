@@ -1,8 +1,12 @@
 package errorx
 
+// CaseNoTrait is a synthetic type used in TypeSwitch, signifying a presence of non-nil error of some other type.
 func NotRecognisedType() *Type { return notRecognisedType }
 
+// CaseNoError is a synthetic trait used in TraitSwitch, signifying an absence of error.
 func CaseNoError() Trait { return caseNoError }
+
+// CaseNoTrait is a synthetic trait used in TraitSwitch, signifying a presence of non-nil error that lacks specified traits.
 func CaseNoTrait() Trait { return caseNoTrait }
 
 var (
@@ -43,7 +47,7 @@ func TypeSwitch(err error, types ...*Type) *Type {
 // For error types that lack any of the provided traits, including non-errorx errors, CaseNoTrait() is returned.
 // It is safe to treat CaseNoTrait() as 'any other kind of not-nil error' case.
 // The effect is equivalent to a series of HasTrait() checks.
-
+//
 // NB: if more than one provided types matches the error, the first match in the providers list is recognised.
 func TraitSwitch(err error, traits ...Trait) Trait {
 	typed := Cast(err)

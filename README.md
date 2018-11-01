@@ -95,7 +95,7 @@ Note that it is never a good idea to inspect a message of an error. Type check, 
 
 An alternative is a mechanisms called **traits**:
 ```go
-// thie first parameter is a name of new error type, the second is a reference to existing trait
+// the first parameter is a name of new error type, the second is a reference to existing trait
 TimeoutElapsed       = MyErrors.NewType("timeout", errorx.Timeout())
 ```
 

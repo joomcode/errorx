@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/joomcode/errorx?status.svg)](https://godoc.org/github.com/joomcode/errorx)
+
 ## Highlights
 
 The *errorx* library provides error implementation and error-related utilities. 
@@ -187,7 +189,7 @@ Key takeaways:
 
 ## More
 
-See godoc for other *errorx* features:
+See [godoc](https://godoc.org/github.com/joomcode/errorx) for other *errorx* features:
 * Namespaces
 * Type switches
 * ```errorx.Ignore```
@@ -196,5 +198,3 @@ See godoc for other *errorx* features:
 * Panic-related utils
 * Type registry
 * etc.
-
-[Read the package documentation for more information](https://godoc.org/github.com/joomcode/errorx).

@@ -77,10 +77,6 @@ func (n Namespace) FullName() string {
 	return n.name
 }
 
-func (n Namespace) String() string {
-	return n.name
-}
-
 // Parent returns the immediate parent namespace, if present.
 // The use of this function outside of a system layer that handles error types (see TypeSubscriber) is a code smell.
 func (n Namespace) Parent() *Namespace {

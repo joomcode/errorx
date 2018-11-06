@@ -105,17 +105,15 @@ func newNamespace(parent *Namespace, name string, traits ...Trait) Namespace {
 	createName := func() string {
 		if parent == nil {
 			return name
-		} else {
-			return fmt.Sprintf("%s.%s", parent.FullName(), name)
 		}
+		return fmt.Sprintf("%s.%s", parent.FullName(), name)
 	}
 
 	createModifiers := func() modifiers {
 		if parent == nil {
 			return noModifiers{}
-		} else {
-			return newInheritedModifiers(parent.modifiers)
 		}
+		return newInheritedModifiers(parent.modifiers)
 	}
 
 	namespace := Namespace{

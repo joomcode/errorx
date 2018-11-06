@@ -67,9 +67,8 @@ func DecorateMany(message string, errs ...error) error {
 
 	if areAllOfTheSameType(errs...) {
 		return WrapMany(transparentWrapper, message, errs...)
-	} else {
-		return WrapMany(opaqueWrapper, message, errs...)
 	}
+	return WrapMany(opaqueWrapper, message, errs...)
 }
 
 // WrapMany is a utility to wrap multiple errors.
@@ -110,9 +109,8 @@ func areAllOfTheSameType(errs ...error) bool {
 
 		if errorType != nil && errorType != typedError.Type() {
 			return false
-		} else {
-			errorType = typedError.Type()
 		}
+		errorType = typedError.Type()
 	}
 
 	return true

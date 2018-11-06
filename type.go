@@ -123,9 +123,8 @@ func newType(namespace Namespace, parent *Type, name string, traits ...Trait) *T
 	collectModifiers := func() modifiers {
 		if parent == nil {
 			return newInheritedModifiers(namespace.modifiers)
-		} else {
-			return newInheritedModifiers(parent.modifiers)
 		}
+		return newInheritedModifiers(parent.modifiers)
 	}
 
 	collectTraits := func() map[Trait]bool {
@@ -150,9 +149,8 @@ func newType(namespace Namespace, parent *Type, name string, traits ...Trait) *T
 	createFullName := func() string {
 		if parent == nil {
 			return namespace.FullName() + "." + name
-		} else {
-			return parent.FullName() + "." + name
 		}
+		return parent.FullName() + "." + name
 	}
 
 	t := &Type{

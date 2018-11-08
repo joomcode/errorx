@@ -20,10 +20,10 @@ type ErrorBuilder struct {
 // NewErrorBuilder creates error builder from an existing error type.
 func NewErrorBuilder(t *Type) *ErrorBuilder {
 	getMode := func() callStackBuildMode {
-		if t.modifiers.CollectStackTrace() {
-			return stackTraceCollect
+		if !t.modifiers.CollectStackTrace() {
+			return stackTraceOmit
 		}
-		return stackTraceOmit
+		return stackTraceCollect
 	}
 
 	return &ErrorBuilder{

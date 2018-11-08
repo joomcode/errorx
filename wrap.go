@@ -65,10 +65,10 @@ func DecorateMany(message string, errs ...error) error {
 		return nil
 	}
 
-	if areAllOfTheSameType(errs...) {
-		return WrapMany(transparentWrapper, message, errs...)
+	if !areAllOfTheSameType(errs...) {
+		return WrapMany(opaqueWrapper, message, errs...)
 	}
-	return WrapMany(opaqueWrapper, message, errs...)
+	return WrapMany(transparentWrapper, message, errs...)
 }
 
 // WrapMany is a utility to wrap multiple errors.

@@ -20,11 +20,10 @@ type ErrorBuilder struct {
 // NewErrorBuilder creates error builder from an existing error type.
 func NewErrorBuilder(t *Type) *ErrorBuilder {
 	getMode := func() callStackBuildMode {
-		if t.modifiers.CollectStackTrace() {
-			return stackTraceCollect
-		} else {
+		if !t.modifiers.CollectStackTrace() {
 			return stackTraceOmit
 		}
+		return stackTraceCollect
 	}
 
 	return &ErrorBuilder{
@@ -136,9 +135,8 @@ func (eb *ErrorBuilder) borrowStackTraceFromCause() *stackTrace {
 	originalStackTrace := eb.extractStackTraceFromCause(eb.cause)
 	if originalStackTrace != nil {
 		return originalStackTrace
-	} else {
-		return collectStackTrace()
 	}
+	return collectStackTrace()
 }
 
 func (eb *ErrorBuilder) combineStackTraceWithCause() *stackTrace {

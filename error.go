@@ -173,9 +173,8 @@ func (e *Error) Error() string {
 func (e *Error) fullMessage() string {
 	if e.transparent {
 		return e.messageWithUnderlyingInfo()
-	} else {
-		return joinStringsIfNonEmpty(": ", e.errorType.FullName(), e.messageWithUnderlyingInfo())
 	}
+	return joinStringsIfNonEmpty(": ", e.errorType.FullName(), e.messageWithUnderlyingInfo())
 }
 
 func (e *Error) messageWithUnderlyingInfo() string {

@@ -34,6 +34,6 @@ var (
 	TimeoutElapsed       = CommonErrors.NewType("timeout", Timeout())
 	// NotImplemented is an error type for lacking implementation
 	NotImplemented       = UnsupportedOperation.NewSubtype("not_implemented")
-	// UnsupportedVersion is a type for unsupported type error
+	// UnsupportedVersion is a type for unsupported version error
 	UnsupportedVersion   = UnsupportedOperation.NewSubtype("version")
 )

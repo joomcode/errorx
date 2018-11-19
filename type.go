@@ -115,6 +115,7 @@ func (t *Type) String() string {
 	return t.FullName()
 }
 
+// MarshalText implements encoding.TextMarshaler
 func (t *Type) MarshalText() (text []byte, err error) {
 	return []byte(t.String()), nil
 }

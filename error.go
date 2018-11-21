@@ -26,27 +26,40 @@ var _ fmt.Formatter = (*Error)(nil)
 // It is a caller's responsibility to accumulate and update a property, if needed.
 // Dynamic properties is a brittle mechanism and should therefore be used with care and in a simple and robust manner.
 func (e *Error) WithProperty(key Property, value interface{}) *Error {
-	if e.properties == nil {
-		e.properties = make(map[Property]interface{}, 1)
+	errorCopy := *e
+
+	if errorCopy.properties == nil {
+		errorCopy.properties = make(map[Property]interface{}, 1)
+	} else {
+		errorCopy.properties = make(map[Property]interface{}, len(e.properties) + 1)
+		for k, v := range e.properties {
+			errorCopy.properties[k] = v
+		}
 	}
 
-	e.properties[key] = value
-	return e
+	errorCopy.properties[key] = value
+	return &errorCopy
 }
 
 // WithUnderlyingErrors adds multiple additional related (hidden, suppressed) errors to be used exclusively in error output.
 // Note that these errors make no other effect whatsoever: their traits, types, properties etc. are lost on the observer.
 // Consider using errorx.DecorateMany instead.
 func (e *Error) WithUnderlyingErrors(errs ...error) *Error {
+	errorCopy := *e
+
+	newUnderying := make([]error, 0, len(e.underlying) + len(errs))
+	newUnderying = append(newUnderying, e.underlying...)
+
 	for _, err := range errs {
 		if err == nil {
 			continue
 		}
 
-		e.underlying = append(e.underlying, err)
+		newUnderying = append(newUnderying, err)
 	}
 
-	return e
+	errorCopy.underlying = newUnderying
+	return &errorCopy
 }
 
 // Property extracts a dynamic property value from an error.

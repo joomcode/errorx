@@ -78,6 +78,9 @@ func TestImmutableError(t *testing.T) {
 		err1 := err.WithProperty(PropertyPayload(), 1)
 		err2 := err1.WithProperty(PropertyPayload(), 2)
 
+		require.True(t, err.errorType.IsOfType(err2.errorType))
+		require.Equal(t, err.message, err2.message)
+
 		payload, ok := ExtractPayload(err)
 		require.False(t, ok)
 
@@ -94,6 +97,9 @@ func TestImmutableError(t *testing.T) {
 		err := testType.NewWithNoMessage()
 		err1 := err.WithUnderlyingErrors(testSubtype0.NewWithNoMessage())
 		err2 := err1.WithUnderlyingErrors(testSubtype1.NewWithNoMessage())
+
+		require.True(t, err.errorType.IsOfType(err2.errorType))
+		require.Equal(t, err.message, err2.message)
 
 		require.Len(t, err.underlying, 0)
 		require.Len(t, err1.underlying, 1)

@@ -72,6 +72,41 @@ func TestErrorMessages(t *testing.T) {
 	})
 }
 
+func TestImmutableError(t *testing.T) {
+	t.Run("Property", func(t *testing.T) {
+		err := testType.NewWithNoMessage()
+		err1 := err.WithProperty(PropertyPayload(), 1)
+		err2 := err1.WithProperty(PropertyPayload(), 2)
+
+		require.True(t, err.errorType.IsOfType(err2.errorType))
+		require.Equal(t, err.message, err2.message)
+
+		payload, ok := ExtractPayload(err)
+		require.False(t, ok)
+
+		payload, ok = ExtractPayload(err1)
+		require.True(t, ok)
+		require.EqualValues(t, 1, payload)
+
+		payload, ok = ExtractPayload(err2)
+		require.True(t, ok)
+		require.EqualValues(t, 2, payload)
+	})
+
+	t.Run("Underlying", func(t *testing.T) {
+		err := testType.NewWithNoMessage()
+		err1 := err.WithUnderlyingErrors(testSubtype0.NewWithNoMessage())
+		err2 := err1.WithUnderlyingErrors(testSubtype1.NewWithNoMessage())
+
+		require.True(t, err.errorType.IsOfType(err2.errorType))
+		require.Equal(t, err.message, err2.message)
+
+		require.Len(t, err.underlying, 0)
+		require.Len(t, err1.underlying, 1)
+		require.Len(t, err2.underlying, 2)
+	})
+}
+
 func TestErrorStackTrace(t *testing.T) {
 	err := createErrorFuncInStackTrace(testType)
 	output := fmt.Sprintf("%+v", err)

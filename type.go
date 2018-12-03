@@ -11,7 +11,7 @@ import (
 type Type struct {
 	namespace Namespace
 	parent    *Type
-	id        int64
+	id        uint64
 	fullName  string
 	traits    map[Trait]bool
 	modifiers modifiers

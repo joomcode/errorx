@@ -16,7 +16,7 @@ type Error struct {
 	underlying  []error
 	stackTrace  *stackTrace
 	transparent bool
-	properties  map[int64]interface{}
+	properties  *propertyMap
 }
 
 var _ fmt.Formatter = (*Error)(nil)
@@ -27,17 +27,7 @@ var _ fmt.Formatter = (*Error)(nil)
 // Dynamic properties is a brittle mechanism and should therefore be used with care and in a simple and robust manner.
 func (e *Error) WithProperty(key Property, value interface{}) *Error {
 	errorCopy := *e
-
-	if errorCopy.properties == nil {
-		errorCopy.properties = make(map[int64]interface{}, 1)
-	} else {
-		errorCopy.properties = make(map[int64]interface{}, len(e.properties)+1)
-		for k, v := range e.properties {
-			errorCopy.properties[k] = v
-		}
-	}
-
-	errorCopy.properties[key.id] = value
+	errorCopy.properties = errorCopy.properties.with(key, value)
 	return &errorCopy
 }
 
@@ -69,7 +59,7 @@ func (e *Error) WithUnderlyingErrors(errs ...error) *Error {
 func (e *Error) Property(key Property) (interface{}, bool) {
 	cause := e
 	for cause != nil {
-		value, ok := cause.properties[key.id]
+		value, ok := cause.properties.get(key)
 		if ok {
 			return value, true
 		}

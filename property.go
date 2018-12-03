@@ -8,11 +8,10 @@ import (
 // Property value belongs to an error instance only, never inherited from a type.
 // Property visibility is hindered by Wrap, preserved by Decorate.
 type Property struct {
-	*property
+	*property // Property is compared by this pointer.
 }
 
 type property struct {
-	id    uint64
 	label string
 }
 
@@ -77,7 +76,6 @@ var (
 func newProperty(label string) Property {
 	p := Property{
 		&property{
-			id:    nextInternalID(),
 			label: label,
 		},
 	}
@@ -86,45 +84,23 @@ func newProperty(label string) Property {
 
 // propertyMap represents map of properties.
 // Compared to builtin type, it uses less allocations and reallocations on copy.
-// It is simple binary search tree that relies on property id randomness for balancing.
+// It is implemented as a simple linked list.
 type propertyMap struct {
 	p     Property
 	value interface{}
-	left  *propertyMap
-	right *propertyMap
+	next  *propertyMap
 }
 
-// withProperty creates new map with property added or overwritten
 func (pm *propertyMap) with(p Property, value interface{}) *propertyMap {
-	if pm == nil {
-		return &propertyMap{p: p, value: value}
-	} else if pm.p == p {
-		return &propertyMap{
-			p:     p,
-			value: value,
-			left:  pm.left,
-			right: pm.right,
-		}
-	} else {
-		copy := *pm
-		if copy.p.id < p.id {
-			copy.right = copy.right.with(p, value)
-		} else {
-			copy.left = copy.left.with(p, value)
-		}
-		return &copy
-	}
+	return &propertyMap{p: p, value: value, next: pm}
 }
 
 func (pm *propertyMap) get(p Property) (value interface{}, ok bool) {
-	switch {
-	case pm == nil:
-		return nil, false
-	case pm.p == p:
-		return pm.value, true
-	case pm.p.id < p.id:
-		return pm.right.get(p)
-	default:
-		return pm.left.get(p)
+	for pm != nil {
+		if pm.p == p {
+			return pm.value, true
+		}
+		pm = pm.next
 	}
+	return nil, false
 }

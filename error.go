@@ -27,6 +27,7 @@ var _ fmt.Formatter = (*Error)(nil)
 // If an error already contained another value for the same property, it is overwritten.
 // It is a caller's responsibility to accumulate and update a property, if needed.
 // Dynamic properties is a brittle mechanism and should therefore be used with care and in a simple and robust manner.
+// Currently, properties are implemented as a linked list, therefore it is not safe to have many dozens of them. But couple of dozen is just ok.
 func (e *Error) WithProperty(key Property, value interface{}) *Error {
 	errorCopy := *e
 	errorCopy.properties = errorCopy.properties.with(key, value)

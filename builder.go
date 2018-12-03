@@ -12,7 +12,6 @@ type ErrorBuilder struct {
 	errorType     *Type
 	message       string
 	cause         error
-	underlying    []error
 	mode          callStackBuildMode
 	isTransparent bool
 }
@@ -93,14 +92,14 @@ func (eb ErrorBuilder) WithConditionallyFormattedMessage(message string, args ..
 
 // Create returns an error with specified params.
 func (eb ErrorBuilder) Create() *Error {
-	return &Error{
+	err := &Error{
 		errorType:   eb.errorType,
 		message:     eb.message,
 		cause:       eb.cause,
-		underlying:  eb.underlying,
 		transparent: eb.isTransparent,
 		stackTrace:  eb.assembleStackTrace(),
 	}
+	return err
 }
 
 type callStackBuildMode int

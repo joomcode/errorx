@@ -69,8 +69,9 @@ func ExtractProperty(err error, key Property) (interface{}, bool) {
 }
 
 var (
-	propertyContext = RegisterProperty("ctx")
-	propertyPayload = RegisterProperty("payload")
+	propertyContext    = RegisterProperty("ctx")
+	propertyPayload    = RegisterProperty("payload")
+	propertyUnderlying = RegisterProperty("underlying")
 )
 
 func newProperty(label string) Property {

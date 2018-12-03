@@ -16,7 +16,7 @@ type Error struct {
 	underlying  []error
 	stackTrace  *stackTrace
 	transparent bool
-	properties  map[Property]interface{}
+	properties  map[int64]interface{}
 }
 
 var _ fmt.Formatter = (*Error)(nil)
@@ -29,15 +29,15 @@ func (e *Error) WithProperty(key Property, value interface{}) *Error {
 	errorCopy := *e
 
 	if errorCopy.properties == nil {
-		errorCopy.properties = make(map[Property]interface{}, 1)
+		errorCopy.properties = make(map[int64]interface{}, 1)
 	} else {
-		errorCopy.properties = make(map[Property]interface{}, len(e.properties) + 1)
+		errorCopy.properties = make(map[int64]interface{}, len(e.properties)+1)
 		for k, v := range e.properties {
 			errorCopy.properties[k] = v
 		}
 	}
 
-	errorCopy.properties[key] = value
+	errorCopy.properties[key.id] = value
 	return &errorCopy
 }
 
@@ -47,7 +47,7 @@ func (e *Error) WithProperty(key Property, value interface{}) *Error {
 func (e *Error) WithUnderlyingErrors(errs ...error) *Error {
 	errorCopy := *e
 
-	newUnderying := make([]error, 0, len(e.underlying) + len(errs))
+	newUnderying := make([]error, 0, len(e.underlying)+len(errs))
 	newUnderying = append(newUnderying, e.underlying...)
 
 	for _, err := range errs {
@@ -69,7 +69,7 @@ func (e *Error) WithUnderlyingErrors(errs ...error) *Error {
 func (e *Error) Property(key Property) (interface{}, bool) {
 	cause := e
 	for cause != nil {
-		value, ok := cause.properties[key]
+		value, ok := cause.properties[key.id]
 		if ok {
 			return value, true
 		}

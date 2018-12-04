@@ -101,9 +101,9 @@ func TestImmutableError(t *testing.T) {
 		require.True(t, err.errorType.IsOfType(err2.errorType))
 		require.Equal(t, err.message, err2.message)
 
-		require.Len(t, err.underlying, 0)
-		require.Len(t, err1.underlying, 1)
-		require.Len(t, err2.underlying, 2)
+		require.Len(t, err.underlying(), 0)
+		require.Len(t, err1.underlying(), 1)
+		require.Len(t, err2.underlying(), 2)
 	})
 }
 

@@ -1,6 +1,7 @@
 package errorx
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -106,4 +107,52 @@ func TestProperty(t *testing.T) {
 		require.False(t, ok)
 		require.Nil(t, property1)
 	})
+}
+
+func BenchmarkAllocProperty(b *testing.B) {
+	const N = 9
+	var properties = []Property{}
+	for j := 0; j < N; j++ {
+		n := fmt.Sprintf("props%d", j)
+		properties = append(properties, RegisterProperty(n))
+		b.Run(n, func(b *testing.B) {
+			for k := 0; k < b.N; k++ {
+				err := testTypeSilent.New("test")
+				for i := 0; i < j; i++ {
+					err = err.WithProperty(properties[i], 42)
+				}
+			}
+		})
+	}
+}
+
+var sum int
+
+func BenchmarkGetProperty(b *testing.B) {
+	const N = 9
+	var properties = []Property{}
+	for j := 0; j < N; j++ {
+		n := fmt.Sprintf("props%d", j)
+		properties = append(properties, RegisterProperty(n))
+		b.Run(n, func(b *testing.B) {
+			err := testTypeSilent.New("test")
+			for i := 0; i < j; i++ {
+				err = err.WithProperty(properties[i], 42)
+			}
+			for k := 0; k < b.N; k++ {
+				v, ok := err.Property(testProperty0)
+				if ok {
+					sum += v.(int)
+				}
+				v, ok = err.Property(properties[j])
+				if ok {
+					sum += v.(int)
+				}
+				v, ok = err.Property(properties[0])
+				if ok {
+					sum += v.(int)
+				}
+			}
+		})
+	}
 }

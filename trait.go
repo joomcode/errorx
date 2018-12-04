@@ -4,7 +4,7 @@ package errorx
 // All errors of a specific type possess exactly the same traits.
 // Traits are both defined along with an error and inherited from a supertype and a namespace.
 type Trait struct {
-	id    int64
+	id    uint64
 	label string
 }
 

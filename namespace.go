@@ -11,7 +11,7 @@ import "fmt"
 //
 type Namespace struct {
 	parent    *Namespace
-	id        int64
+	id        uint64
 	name      string
 	traits    []Trait
 	modifiers modifiers
@@ -19,8 +19,7 @@ type Namespace struct {
 
 // NamespaceKey is a comparable descriptor of a Namespace.
 type NamespaceKey struct {
-	id   int64
-	name string
+	id uint64
 }
 
 // NewNamespace defines a namespace with a name and, optionally, a number of inheritable traits.
@@ -51,8 +50,7 @@ func (n Namespace) NewType(typeName string, traits ...Trait) *Type {
 // Key returns a comparison key for namespace.
 func (n Namespace) Key() NamespaceKey {
 	return NamespaceKey{
-		id:   n.id,
-		name: n.name,
+		id: n.id,
 	}
 }
 

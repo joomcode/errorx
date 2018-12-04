@@ -10,13 +10,15 @@ import (
 // At the moment of creation, Error collects information based on context, creation modifiers and type it belongs to.
 // Error is mostly immutable, and distinct errors composition is achieved through wrap.
 type Error struct {
-	message     string
-	errorType   *Type
-	cause       error
-	underlying  []error
-	stackTrace  *stackTrace
-	transparent bool
-	properties  map[Property]interface{}
+	message    string
+	errorType  *Type
+	cause      error
+	stackTrace *stackTrace
+	// properties are used both for public properties inherited through "transparent" wrapping
+	// and for some optional per-instance information like "underlying errors"
+	properties    *propertyMap
+	transparent   bool
+	hasUnderlying bool
 }
 
 var _ fmt.Formatter = (*Error)(nil)
@@ -25,19 +27,10 @@ var _ fmt.Formatter = (*Error)(nil)
 // If an error already contained another value for the same property, it is overwritten.
 // It is a caller's responsibility to accumulate and update a property, if needed.
 // Dynamic properties is a brittle mechanism and should therefore be used with care and in a simple and robust manner.
+// Currently, properties are implemented as a linked list, therefore it is not safe to have many dozens of them. But couple of dozen is just ok.
 func (e *Error) WithProperty(key Property, value interface{}) *Error {
 	errorCopy := *e
-
-	if errorCopy.properties == nil {
-		errorCopy.properties = make(map[Property]interface{}, 1)
-	} else {
-		errorCopy.properties = make(map[Property]interface{}, len(e.properties) + 1)
-		for k, v := range e.properties {
-			errorCopy.properties[k] = v
-		}
-	}
-
-	errorCopy.properties[key] = value
+	errorCopy.properties = errorCopy.properties.with(key, value)
 	return &errorCopy
 }
 
@@ -45,21 +38,25 @@ func (e *Error) WithProperty(key Property, value interface{}) *Error {
 // Note that these errors make no other effect whatsoever: their traits, types, properties etc. are lost on the observer.
 // Consider using errorx.DecorateMany instead.
 func (e *Error) WithUnderlyingErrors(errs ...error) *Error {
-	errorCopy := *e
-
-	newUnderying := make([]error, 0, len(e.underlying) + len(errs))
-	newUnderying = append(newUnderying, e.underlying...)
+	underlying := e.underlying()
+	newUnderlying := underlying
 
 	for _, err := range errs {
 		if err == nil {
 			continue
 		}
 
-		newUnderying = append(newUnderying, err)
+		newUnderlying = append(newUnderlying, err)
 	}
 
-	errorCopy.underlying = newUnderying
-	return &errorCopy
+	if len(newUnderlying) == len(underlying) {
+		return e
+	}
+
+	l := len(newUnderlying) // note: l > 0, because non-increased 0 length is handled above
+	errorCopy := e.WithProperty(propertyUnderlying, newUnderlying[:l:l])
+	errorCopy.hasUnderlying = true
+	return errorCopy
 }
 
 // Property extracts a dynamic property value from an error.
@@ -69,7 +66,7 @@ func (e *Error) WithUnderlyingErrors(errs ...error) *Error {
 func (e *Error) Property(key Property) (interface{}, bool) {
 	cause := e
 	for cause != nil {
-		value, ok := cause.properties[key]
+		value, ok := cause.properties.get(key)
 		if ok {
 			return value, true
 		}
@@ -195,16 +192,27 @@ func (e *Error) messageWithUnderlyingInfo() string {
 }
 
 func (e *Error) underlyingInfo() string {
-	if len(e.underlying) == 0 {
+	if !e.hasUnderlying {
 		return ""
 	}
 
-	infos := make([]string, 0, len(e.underlying))
-	for _, err := range e.underlying {
+	underlying := e.underlying()
+	infos := make([]string, 0, len(underlying))
+	for _, err := range underlying {
 		infos = append(infos, err.Error())
 	}
 
 	return fmt.Sprintf("(hidden: %s)", joinStringsIfNonEmpty(", ", infos...))
+}
+
+func (e *Error) underlying() []error {
+	if !e.hasUnderlying {
+		return nil
+	}
+	// Note: properties are used as storage for optional "underlying errors".
+	// Chain of cause should not be traversed here.
+	u, _ := e.properties.get(propertyUnderlying)
+	return u.([]error)
 }
 
 func (e *Error) messageText() string {

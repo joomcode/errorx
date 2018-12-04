@@ -8,7 +8,10 @@ import (
 // Property value belongs to an error instance only, never inherited from a type.
 // Property visibility is hindered by Wrap, preserved by Decorate.
 type Property struct {
-	id    int64
+	*property // Property is compared by this pointer.
+}
+
+type property struct {
 	label string
 }
 
@@ -65,13 +68,39 @@ func ExtractProperty(err error, key Property) (interface{}, bool) {
 }
 
 var (
-	propertyContext = RegisterProperty("ctx")
-	propertyPayload = RegisterProperty("payload")
+	propertyContext    = RegisterProperty("ctx")
+	propertyPayload    = RegisterProperty("payload")
+	propertyUnderlying = RegisterProperty("underlying")
 )
 
 func newProperty(label string) Property {
-	return Property{
-		id:    nextInternalID(),
-		label: label,
+	p := Property{
+		&property{
+			label: label,
+		},
 	}
+	return p
+}
+
+// propertyMap represents map of properties.
+// Compared to builtin type, it uses less allocations and reallocations on copy.
+// It is implemented as a simple linked list.
+type propertyMap struct {
+	p     Property
+	value interface{}
+	next  *propertyMap
+}
+
+func (pm *propertyMap) with(p Property, value interface{}) *propertyMap {
+	return &propertyMap{p: p, value: value, next: pm}
+}
+
+func (pm *propertyMap) get(p Property) (value interface{}, ok bool) {
+	for pm != nil {
+		if pm.p == p {
+			return pm.value, true
+		}
+		pm = pm.next
+	}
+	return nil, false
 }

@@ -88,6 +88,12 @@ func (t *Type) IsOfType(other *Type) bool {
 	return false
 }
 
+// HasTrait checks if a type possesses the expected trait.
+func (t *Type) HasTrait(key Trait) bool {
+	_, ok := t.traits[key]
+	return ok
+}
+
 // IsOfType is a type check for errors.
 // Returns true either if both are of exactly the same type, or if the same is true for one of current type's ancestors.
 // For an error that does not have an errorx type, returns false.

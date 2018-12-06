@@ -89,8 +89,7 @@ func (e *Error) HasTrait(key Trait) bool {
 	cause := e
 	for cause != nil {
 		if !cause.transparent {
-			_, ok := cause.errorType.traits[key]
-			return ok
+			return cause.errorType.HasTrait(key)
 		}
 
 		cause = Cast(cause.Cause())

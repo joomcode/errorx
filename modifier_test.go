@@ -9,7 +9,7 @@ import (
 
 var (
 	modifierTestNamespace                 = NewNamespace("modifier")
-	modifierTestNamespaceTransparent      = NewNamespace("modifierTransparent").ApplyModifiers(TypeModifierTransparent)
+	modifierTestNamespaceTransparent      = NewNamespace("modifierTransparent").ApplyModifiers(typeModifierTransparent)
 	modifierTestNamespaceTransparentChild = modifierTestNamespaceTransparent.NewSubNamespace("child")
 	modifierTestError                     = modifierTestNamespace.NewType("foo")
 	modifierTestErrorNoTrace              = modifierTestNamespace.NewType("bar").ApplyModifiers(TypeModifierOmitStackTrace)

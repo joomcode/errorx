@@ -7,11 +7,9 @@ var (
 	// Private error type for non-errors errors, used as a not-nil substitute that cannot be type-checked directly
 	foreignType = syntheticErrors.NewType("foreign")
 	// Private error type used as a universal wrapper, meant to ann nothing at all to the error apart from some message
-	transparentWrapper = syntheticErrors.NewType("decorate").ApplyModifiers(TypeModifierTransparent)
+	transparentWrapper = syntheticErrors.NewType("decorate").ApplyModifiers(typeModifierTransparent)
 	// Private error type used as a densely opaque wrapper which hides both the original error and its own type
 	opaqueWrapper = syntheticErrors.NewType("wrap")
-	// Private error type used for stack trace capture
-	stackTraceWrapper = syntheticErrors.NewType("stacktrace").ApplyModifiers(TypeModifierTransparent)
 )
 
 // Decorate allows to pass some text info along with a message, leaving its semantics totally intact.
@@ -22,7 +20,6 @@ func Decorate(err error, message string, args ...interface{}) *Error {
 	return NewErrorBuilder(transparentWrapper).
 		WithConditionallyFormattedMessage(message, args...).
 		WithCause(err).
-		Transparent().
 		Create()
 }
 
@@ -34,7 +31,6 @@ func EnhanceStackTrace(err error, message string, args ...interface{}) *Error {
 	return NewErrorBuilder(transparentWrapper).
 		WithConditionallyFormattedMessage(message, args...).
 		WithCause(err).
-		Transparent().
 		EnhanceStackTrace().
 		Create()
 }
@@ -47,10 +43,9 @@ func EnsureStackTrace(err error) *Error {
 		return typedErr
 	}
 
-	return NewErrorBuilder(stackTraceWrapper).
+	return NewErrorBuilder(transparentWrapper).
 		WithConditionallyFormattedMessage("").
 		WithCause(err).
-		Transparent().
 		EnhanceStackTrace().
 		Create()
 }

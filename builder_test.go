@@ -15,8 +15,8 @@ func TestBuilderTransparency(t *testing.T) {
 	})
 
 	t.Run("RawWithModifier", func(t *testing.T) {
-		err := NewErrorBuilder(testTypeTransparent).WithCause(errors.New("bad thing")).Create()
-		require.False(t, err.IsOfType(testType))
-		require.NotEqual(t, testType, err.Type())
+		err := NewErrorBuilder(transparentWrapper).WithCause(errors.New("bad thing")).Create()
+		require.False(t, err.IsOfType(transparentWrapper))
+		require.NotEqual(t, transparentWrapper, err.Type())
 	})
 }

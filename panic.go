@@ -47,7 +47,7 @@ func ErrorFromPanic(recoverResult interface{}) (error, bool) {
 func newPanicErrorWrapper(err error) *panicErrorWrapper {
 	originalError, errWithStackTrace := err, err
 	if typedErr, ok := errWithStackTrace.(*Error); !ok || typedErr.stackTrace == nil {
-		builder := NewErrorBuilder(panicPayloadWrap).WithConditionallyFormattedMessage("").WithCause(err)
+		builder := NewErrorBuilder(transparentWrapper).WithConditionallyFormattedMessage("").WithCause(err)
 		errWithStackTrace = builder.Create()
 	}
 
@@ -70,6 +70,3 @@ func (w *panicErrorWrapper) Error() string {
 func (w *panicErrorWrapper) String() string {
 	return w.Error()
 }
-
-// Only required to transform panic into error while preserving the stack trace
-var panicPayloadWrap = syntheticErrors.NewType("panic").ApplyModifiers(TypeModifierTransparent)

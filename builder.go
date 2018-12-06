@@ -99,6 +99,13 @@ func (eb ErrorBuilder) Create() *Error {
 		transparent: eb.isTransparent,
 		stackTrace:  eb.assembleStackTrace(),
 	}
+	if err.transparent {
+		if cause := Cast(eb.cause); cause != nil {
+			err.errorType = cause.errorType
+		} else {
+			err.errorType = foreignType
+		}
+	}
 	return err
 }
 

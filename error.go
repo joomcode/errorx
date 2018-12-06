@@ -91,32 +91,14 @@ func (e *Error) Property(key Property) (interface{}, bool) {
 // Traits are always properties of a type rather than of an instance, so trait check is an alternative to a type check.
 // This alternative is preferable, though, as it is less brittle and generally creates less of a dependency.
 func (e *Error) HasTrait(key Trait) bool {
-	cause := e
-	for cause != nil {
-		if !cause.transparent {
-			return cause.errorType.HasTrait(key)
-		}
-
-		cause = Cast(cause.Cause())
-	}
-
-	return false
+	return e.errorType.HasTrait(key)
 }
 
 // IsOfType is a proper type check for an error.
 // It takes the transparency and error types hierarchy into account,
 // so that type check against any supertype of the original cause passes.
 func (e *Error) IsOfType(t *Type) bool {
-	cause := e
-	for cause != nil {
-		if !cause.transparent {
-			return cause.errorType.IsOfType(t)
-		}
-
-		cause = Cast(cause.Cause())
-	}
-
-	return false
+	return e.errorType.IsOfType(t)
 }
 
 // Type returns the exact type of this error.
@@ -127,16 +109,7 @@ func (e *Error) IsOfType(t *Type) bool {
 // This may happen if a type is checked against one of its supertypes, for example.
 // Therefore, handle direct type checks with care or avoid it altogether and use TypeSwitch() or IsForType() instead.
 func (e *Error) Type() *Type {
-	cause := e
-	for cause != nil {
-		if !cause.transparent {
-			return cause.errorType
-		}
-
-		cause = Cast(cause.Cause())
-	}
-
-	return foreignType
+	return e.errorType
 }
 
 // Message returns a message of this particular error, disregarding the cause.

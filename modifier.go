@@ -7,8 +7,8 @@ package errorx
 type TypeModifier int
 
 const (
-	// TypeModifierTransparent is a type modifier; an error type with such modifier creates transparent wrappers by default
-	TypeModifierTransparent TypeModifier = 1
+	// typeModifierTransparent is a type modifier; an error type with such modifier creates transparent wrappers by default
+	typeModifierTransparent TypeModifier = 1
 	// TypeModifierOmitStackTrace is a type modifier; an error type with such modifier omits the stack trace collection upon creation of an error instance
 	TypeModifierOmitStackTrace TypeModifier = 2
 )
@@ -49,7 +49,7 @@ func newTypeModifiers(modifiers ...TypeModifier) modifiers {
 		switch modifier {
 		case TypeModifierOmitStackTrace:
 			m.omitStackTrace = true
-		case TypeModifierTransparent:
+		case typeModifierTransparent:
 			m.transparent = true
 		}
 	}

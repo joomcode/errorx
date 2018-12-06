@@ -107,10 +107,11 @@ func areAllOfTheSameType(errs ...error) bool {
 			return false
 		}
 
-		if errorType != nil && errorType != typedError.Type() {
+		if errorType == nil {
+			errorType = typedError.Type()
+		} else if errorType != typedError.Type() {
 			return false
 		}
-		errorType = typedError.Type()
 	}
 
 	return true

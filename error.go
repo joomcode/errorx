@@ -16,9 +16,11 @@ type Error struct {
 	stackTrace *stackTrace
 	// properties are used both for public properties inherited through "transparent" wrapping
 	// and for some optional per-instance information like "underlying errors"
-	properties    *propertyMap
-	transparent   bool
-	hasUnderlying bool
+	properties *propertyMap
+
+	transparent            bool
+	hasUnderlying          bool
+	printablePropertyCount uint8
 }
 
 var _ fmt.Formatter = (*Error)(nil)
@@ -31,6 +33,9 @@ var _ fmt.Formatter = (*Error)(nil)
 func (e *Error) WithProperty(key Property, value interface{}) *Error {
 	errorCopy := *e
 	errorCopy.properties = errorCopy.properties.with(key, value)
+	if key.printable && errorCopy.printablePropertyCount < 255 {
+		errorCopy.printablePropertyCount++
+	}
 	return &errorCopy
 }
 
@@ -205,6 +210,25 @@ func (e *Error) underlyingInfo() string {
 	return fmt.Sprintf("(hidden: %s)", joinStringsIfNonEmpty(", ", infos...))
 }
 
+func (e *Error) messageFromProperties() string {
+	if e.printablePropertyCount == 0 {
+		return ""
+	}
+	uniq := make(map[Property]struct{}, e.printablePropertyCount)
+	strs := make([]string, 0, e.printablePropertyCount)
+	for m := e.properties; m != nil; m = m.next {
+		if !m.p.printable {
+			continue
+		}
+		if _, ok := uniq[m.p]; ok {
+			continue
+		}
+		uniq[m.p] = struct{}{}
+		strs = append(strs, fmt.Sprintf("%s: %v", m.p.label, m.value))
+	}
+	return "{" + strings.Join(strs, ", ") + "}"
+}
+
 func (e *Error) underlying() []error {
 	if !e.hasUnderlying {
 		return nil
@@ -216,21 +240,35 @@ func (e *Error) underlying() []error {
 }
 
 func (e *Error) messageText() string {
-	if e.Cause() == nil {
-		return e.message
+	message := joinStringsIfNonEmpty(" ", e.message, e.messageFromProperties())
+	if cause := e.Cause(); cause != nil {
+		return joinStringsIfNonEmpty(", cause: ", message, cause.Error())
 	}
-
-	underlyingFullMessage := e.Cause().Error()
-	return joinStringsIfNonEmpty(", cause: ", e.message, underlyingFullMessage)
+	return message
 }
 
 func joinStringsIfNonEmpty(delimiter string, parts ...string) string {
-	filteredParts := make([]string, 0, len(parts))
-	for _, part := range parts {
-		if len(part) > 0 {
-			filteredParts = append(filteredParts, part)
+	switch len(parts) {
+	case 0:
+		return ""
+	case 1:
+		return parts[0]
+	case 2:
+		if len(parts[0]) == 0 {
+			return parts[1]
+		} else if len(parts[1]) == 0 {
+			return parts[0]
+		} else {
+			return parts[0] + delimiter + parts[1]
 		}
-	}
+	default:
+		filteredParts := make([]string, 0, len(parts))
+		for _, part := range parts {
+			if len(part) > 0 {
+				filteredParts = append(filteredParts, part)
+			}
+		}
 
-	return strings.Join(filteredParts, delimiter)
+		return strings.Join(filteredParts, delimiter)
+	}
 }

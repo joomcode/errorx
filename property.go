@@ -12,13 +12,21 @@ type Property struct {
 }
 
 type property struct {
-	label string
+	label     string
+	printable bool
 }
 
 // RegisterProperty registers a new property key.
 // It is used both to add a dynamic property to an error instance, and to extract property value back from error.
 func RegisterProperty(label string) Property {
-	return newProperty(label)
+	return newProperty(label, false)
+}
+
+// RegisterPrintableProperty registers a new property key for informational value.
+// It is used both to add a dynamic property to an error instance, and to extract property value back from error.
+// Printable property will be included in Error() message, both name and value.
+func RegisterPrintableProperty(label string) Property {
+	return newProperty(label, true)
 }
 
 // PropertyContext is a context property, value is expected to be of context.Context type.
@@ -73,10 +81,11 @@ var (
 	propertyUnderlying = RegisterProperty("underlying")
 )
 
-func newProperty(label string) Property {
+func newProperty(label string, printable bool) Property {
 	p := Property{
 		&property{
-			label: label,
+			label:     label,
+			printable: printable,
 		},
 	}
 	return p

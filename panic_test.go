@@ -116,18 +116,19 @@ func TestPanicChain(t *testing.T) {
 	ch0 := make(chan error, 1)
 	ch1 := make(chan error, 1)
 
-	doMischief(ch1)
-	doMoreMischief(ch0, ch1)
+	go doMischief(ch1)
+	go doMoreMischief(ch0, ch1)
 
 	select {
 	case err := <-ch0:
 		require.Error(t, err)
+		require.False(t, IsOfType(err, AssertionFailed))
 		output := fmt.Sprintf("%+v", err)
 		require.Contains(t, output, "mischiefProper", output)
 		require.Contains(t, output, "mischiefAsPanic", output)
 		require.Contains(t, output, "doMischief", output)
 		require.Contains(t, output, "handleMischief", output)
-		require.Contains(t, output, "doMoreMischief", output)
+		require.NotContains(t, output, "doMoreMischief", output) // stack trace is only enhanced in Panic, not in user code
 		t.Log(output)
 	case <-time.After(time.Second):
 		require.Fail(t, "expected error")
@@ -163,7 +164,7 @@ func doMischief(ch chan error) {
 				return
 			}
 		}
-		ch <- AssertionFailed.New("test failed") // todo check
+		ch <- AssertionFailed.New("test failed")
 	}()
 
 	mischiefAsPanic()

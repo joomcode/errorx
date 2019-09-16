@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
 
@@ -157,4 +158,65 @@ func createWrappedErrorFuncInnerInStackTrace(et *Type) *Error {
 
 func createErrorInAnotherGoroutine(et *Type, channel chan *Error) {
 	channel <- et.NewWithNoMessage()
+}
+
+func Test_GetAllPrintableProperties(t *testing.T) {
+	tests := []struct {
+		name  string
+		prop  Property
+		value interface{}
+	}{
+		{
+			"withNonPrintableProperty",
+			RegisterProperty("test"),
+			nil,
+		},
+		{
+			"withPrintableProperty_string",
+			RegisterPrintableProperty("test"),
+			"data",
+		},
+		{
+			"withPrintableProperty_int",
+			RegisterPrintableProperty("test"),
+			123456789,
+		},
+		{
+			"withPrintableProperty_float",
+			RegisterPrintableProperty("test"),
+			123.456,
+		},
+		{
+			"withPrintableProperty_bool",
+			RegisterPrintableProperty("test"),
+			true,
+		},
+		{
+			"withPrintableProperty_slice_string",
+			RegisterPrintableProperty("test"),
+			[3]string{"a", "b", "c"},
+		},
+		{
+			"withPrintableProperty_slice_int",
+			RegisterPrintableProperty("test"),
+			[3]int{1, 2, 3},
+		},
+		{
+			"withPrintableProperty_map",
+			RegisterPrintableProperty("test"),
+			map[string]interface{}{"key1": "a", "key2": 1, "key3": true},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			errData := Decorate(testType.New(tt.name), "ouch").WithProperty(tt.prop, tt.value)
+			expectedResult := map[string]interface{}{}
+			if tt.value != nil {
+				expectedResult = map[string]interface{}{"test": tt.value}
+			}
+			assert.EqualValues(t,
+				expectedResult,
+				errData.GetAllPrintableProperties())
+		})
+	}
 }

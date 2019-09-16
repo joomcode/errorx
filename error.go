@@ -213,17 +213,9 @@ func (e *Error) messageFromProperties() string {
 	if e.printablePropertyCount == 0 {
 		return ""
 	}
-	uniq := make(map[Property]struct{}, e.printablePropertyCount)
 	strs := make([]string, 0, e.printablePropertyCount)
-	for m := e.properties; m != nil; m = m.next {
-		if !m.p.printable {
-			continue
-		}
-		if _, ok := uniq[m.p]; ok {
-			continue
-		}
-		uniq[m.p] = struct{}{}
-		strs = append(strs, fmt.Sprintf("%s: %v", m.p.label, m.value))
+	for k, v := range e.GetAllPrintableProperties() {
+		strs = append(strs, fmt.Sprintf("%s: %v", k, v))
 	}
 	return "{" + strings.Join(strs, ", ") + "}"
 }
@@ -270,4 +262,18 @@ func joinStringsIfNonEmpty(delimiter string, parts ...string) string {
 
 		return strings.Join(filteredParts, delimiter)
 	}
+}
+
+func (e *Error) GetAllPrintableProperties() map[string]interface{} {
+	uniq := make(map[string]interface{}, e.printablePropertyCount)
+	for m := e.properties; m != nil; m = m.next {
+		if !m.p.printable {
+			continue
+		}
+		if _, ok := uniq[m.p.label]; ok {
+			continue
+		}
+		uniq[m.p.label] = m.value
+	}
+	return uniq
 }

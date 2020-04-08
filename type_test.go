@@ -15,14 +15,6 @@ func TestSubTypeName(t *testing.T) {
 	require.Equal(t, "foo.bar.internal.wat", testSubtype1.FullName())
 }
 
-func TestRootNamespace(t *testing.T) {
-	require.Equal(t, testNamespace, testType.NewWithNoMessage().Type().RootNamespace())
-}
-
-func TestSubTypeNamespace(t *testing.T) {
-	require.Equal(t, "foo", testSubtype1.RootNamespace().FullName())
-}
-
 func TestErrorTypeCheck(t *testing.T) {
 	require.True(t, testSubtype1.IsOfType(testSubtype1))
 	require.False(t, testSubtype1.IsOfType(NewNamespace("a").NewType("b")))

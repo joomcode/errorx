@@ -22,7 +22,7 @@ func TestNamespaceName(t *testing.T) {
 	require.EqualValues(t, "nsTest1.child", nsTest1Child.FullName())
 }
 
-func TestNamespace(t *testing.T) {
+func TestIsNamespaceOf(t *testing.T) {
 	require.True(t, nsTest0.IsNamespaceOf(nsTestET0))
 	require.False(t, nsTest1.IsNamespaceOf(nsTestET0))
 	require.False(t, nsTest0.IsNamespaceOf(nsTestET1))
@@ -38,4 +38,17 @@ func TestSubNamespace(t *testing.T) {
 	require.False(t, nsTest1Child.IsNamespaceOf(nsTestET1))
 	require.True(t, nsTest1Child.IsNamespaceOf(nsTestChild1ET))
 	require.True(t, nsTest1Child.IsNamespaceOf(nsTestChild1ETChild))
+}
+
+
+func TestRootNamespace(t *testing.T) {
+	require.Equal(t, nsTest1, nsTestChild1ET.NewWithNoMessage().Type().RootNamespace())
+}
+
+func TestNamespace(t *testing.T) {
+	require.Equal(t, nsTest1Child, nsTestChild1ET.NewWithNoMessage().Type().Namespace())
+}
+
+func TestSubTypeNamespaceFullName(t *testing.T) {
+	require.Equal(t, "nsTest1.child", nsTestChild1ETChild.Namespace().FullName())
 }

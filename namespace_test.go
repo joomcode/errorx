@@ -40,7 +40,6 @@ func TestSubNamespace(t *testing.T) {
 	require.True(t, nsTest1Child.IsNamespaceOf(nsTestChild1ETChild))
 }
 
-
 func TestRootNamespace(t *testing.T) {
 	require.Equal(t, nsTest1, nsTestChild1ET.NewWithNoMessage().Type().RootNamespace())
 }

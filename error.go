@@ -156,6 +156,13 @@ func (e *Error) Cause() error {
 	return e.cause
 }
 
+// Unwrap returns the same value as Cause().
+// This method has been provided to allow errorx.Error to work with error.Is from
+// the Go standard library.
+func (e *Error) Unwrap() error {
+	return e.Cause()
+}
+
 // Format implements the Formatter interface.
 // Supported verbs:
 //

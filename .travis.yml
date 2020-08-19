@@ -1,5 +1,7 @@
 language: go
 
+before_script: cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -
+
 go:
   - "1.8.x"
   - "1.14.x"

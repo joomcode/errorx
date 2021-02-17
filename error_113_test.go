@@ -70,3 +70,34 @@ func TestErrorUnwrap(t *testing.T) {
 		require.True(t, errors.Is(unwrapped, io.EOF))
 	})
 }
+
+func TestErrorIs(t *testing.T) {
+	t.Run("Trivial", func(t *testing.T) {
+		err := testType.NewWithNoMessage()
+		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
+		require.False(t, errors.Is(err, testTypeBar1.NewWithNoMessage()))
+	})
+
+	t.Run("Wrap", func(t *testing.T) {
+		err := testTypeBar1.Wrap(testType.NewWithNoMessage(),"")
+		require.False(t, errors.Is(err, testType.NewWithNoMessage()))
+		require.True(t, errors.Is(err, testTypeBar1.NewWithNoMessage()))
+	})
+
+	t.Run("Supertype", func(t *testing.T) {
+		err := testSubtype0.Wrap(testTypeBar1.NewWithNoMessage(),"")
+		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
+		require.True(t, errors.Is(err, testSubtype0.NewWithNoMessage()))
+		require.False(t, errors.Is(err, testTypeBar1.NewWithNoMessage()))
+	})
+
+	t.Run("Decorate", func(t *testing.T) {
+		err := Decorate(testType.NewWithNoMessage(),"")
+		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
+	})
+
+	t.Run("DecorateForeign", func(t *testing.T) {
+		err := Decorate(io.EOF,"")
+		require.True(t, errors.Is(err, io.EOF))
+	})
+}

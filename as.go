@@ -2,6 +2,7 @@ package errorx
 
 import "fmt"
 
+// todo godoc
 type typeCheckTarget struct {
 	err *Error
 	assignabilityBlocker interface{}

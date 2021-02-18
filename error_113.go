@@ -4,6 +4,7 @@ package errorx
 
 import "reflect"
 
+// todo godoc
 // As checks if target is of the same type as current error and, if true, sets target to this error value.
 // NB: Call to errors.As() converts any type of errorx error to any other type,
 // therefore such calls are currently unsafe for errorx errors and will likely break semantics.

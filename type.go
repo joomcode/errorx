@@ -74,7 +74,8 @@ func (t *Type) WrapWithNoMessage(err error) *Error {
 		Create()
 }
 
-func (t *Type) ForTypeCheck() typeCheckTarget {
+// todo godoc
+func (t *Type) ForTypeCheck() typeCheckTarget { // todo inspecton
 	return typeCheckTarget{err: t.NewWithNoMessage()}
 }
 

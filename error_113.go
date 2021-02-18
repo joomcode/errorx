@@ -2,7 +2,14 @@
 
 package errorx
 
+import "reflect"
+
 // todo godoc
+// NB: Call to errors.As() converts any type of errorx error to any other type, therefore such calls may break semantics.
+// Note than calls to errors.Is() do not suffer from the same issue.
+// todo add errorx.As() ?
+// todo make another type for passing into errors.As()?
+// todo when fixed, add tests for wrap/decorate etc.
 func (e *Error) As(target interface{}) bool {
 	targetError, ok := target.(*error)
 	if !ok {
@@ -13,7 +20,8 @@ func (e *Error) As(target interface{}) bool {
 		return false
 	}
 
-	// todo inject
+	targetVal := reflect.ValueOf(target)
+	targetVal.Elem().Set(reflect.ValueOf(e))
 	return true
 }
 
@@ -24,7 +32,7 @@ func (e *Error) Is(target error) bool {
 		return false
 	}
 
-	return e.IsOfType(typedTarget.Type()) // todo test with parents
+	return e.IsOfType(typedTarget.Type())
 }
 
 // todo godoc

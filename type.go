@@ -74,6 +74,10 @@ func (t *Type) WrapWithNoMessage(err error) *Error {
 		Create()
 }
 
+func (t *Type) ForTypeCheck() typeCheckTarget {
+	return typeCheckTarget{err: t.NewWithNoMessage()}
+}
+
 // IsOfType is a type check for error.
 // Returns true either if both are of exactly the same type, or if the same is true for one of current type's ancestors.
 func (t *Type) IsOfType(other *Type) bool {

@@ -144,16 +144,45 @@ func TestErrorAs(t *testing.T) {
 		require.False(t, errors.As(err, &target))
 	})
 
+	t.Run("Wrap", func(t *testing.T) {
+		err := testTypeBar2.Wrap(testTypeBar1.NewWithNoMessage(), "")
+		target := testTypeBar2.ForTypeCheck()
+		require.True(t, errors.As(err, &target))
+		targetBad := testTypeBar1.ForTypeCheck()
+		require.False(t, errors.As(err, &targetBad))
+	})
+
+	t.Run("Decorate", func(t *testing.T) {
+		err := Decorate(testTypeBar1.NewWithNoMessage(), "")
+		target := testTypeBar1.ForTypeCheck()
+		require.True(t, errors.As(err, &target))
+	})
+
 	t.Run("DecorateForeign", func(t *testing.T) {
 		err := Decorate(myErr("test"),"")
 		var target myErr
 		require.True(t, errors.As(err, &target))
 		require.EqualValues(t, "test", target.Error())
 	})
+
+	t.Run("Parent", func(t *testing.T) {
+		err := Decorate(fooReturnsSubtypeError(), "")
+		target := testSubtype0.ForTypeCheck()
+		require.True(t, errors.As(err, &target))
+		targetParent := testType.ForTypeCheck()
+		require.True(t, errors.As(err, &targetParent))
+		require.EqualValues(t, "whoops", targetParent.AsError().Message())
+		output := fmt.Sprintf("%+v", targetParent)
+		require.Contains(t, output, "fooReturnsSubtypeError", output)
+	})
 }
 
 func fooReturnsError() error {
 	return testType.New("whoops")
+}
+
+func fooReturnsSubtypeError() error {
+	return testSubtype0.New("whoops")
 }
 
 type myErr string

@@ -34,6 +34,7 @@ func TestErrorUnwrap(t *testing.T) {
 		unwrapped := errors.Unwrap(err)
 		require.NotNil(t, unwrapped)
 		require.True(t, IsOfType(unwrapped, testType))
+		require.True(t, Cast(unwrapped).Type() == testType)
 	})
 
 	t.Run("DecorateForeign", func(t *testing.T) {
@@ -41,6 +42,7 @@ func TestErrorUnwrap(t *testing.T) {
 		unwrapped := errors.Unwrap(err)
 		require.NotNil(t, unwrapped)
 		require.True(t, errors.Is(unwrapped, io.EOF))
+		require.True(t, unwrapped == io.EOF)
 	})
 
 	t.Run("Nested", func(t *testing.T) {
@@ -79,26 +81,25 @@ func TestErrorIs(t *testing.T) {
 	})
 
 	t.Run("Wrap", func(t *testing.T) {
-		err := testTypeBar1.Wrap(testType.NewWithNoMessage(),"")
+		err := testTypeBar1.Wrap(testType.NewWithNoMessage(), "")
 		require.False(t, errors.Is(err, testType.NewWithNoMessage()))
 		require.True(t, errors.Is(err, testTypeBar1.NewWithNoMessage()))
 	})
 
 	t.Run("Supertype", func(t *testing.T) {
-		err := testSubtype0.Wrap(testTypeBar1.NewWithNoMessage(),"")
+		err := testSubtype0.Wrap(testTypeBar1.NewWithNoMessage(), "")
 		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
 		require.True(t, errors.Is(err, testSubtype0.NewWithNoMessage()))
 		require.False(t, errors.Is(err, testTypeBar1.NewWithNoMessage()))
 	})
 
 	t.Run("Decorate", func(t *testing.T) {
-		err := Decorate(testType.NewWithNoMessage(),"")
+		err := Decorate(testType.NewWithNoMessage(), "")
 		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
 	})
 
 	t.Run("DecorateForeign", func(t *testing.T) {
-		err := Decorate(io.EOF,"")
+		err := Decorate(io.EOF, "")
 		require.True(t, errors.Is(err, io.EOF))
 	})
 }
-

@@ -117,4 +117,9 @@ func TestErrorsAndErrorx(t *testing.T) {
 		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
 		require.True(t, IsOfType(err, testType))
 	})
+
+	t.Run("LayeredDecorateAgain", func(t *testing.T) {
+		err := fmt.Errorf("error test: %w", Decorate(io.EOF, "test"))
+		require.True(t, errors.Is(err, io.EOF))
+	})
 }

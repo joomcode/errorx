@@ -29,6 +29,7 @@ func (e *Error) IsOfType(t *Type) bool {
 	return false
 }
 
+// burrowForTyped returns either the first *Error in unwrap chain or nil
 func burrowForTyped(err error) *Error {
 	raw := err
 	for raw != nil {

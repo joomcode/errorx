@@ -103,7 +103,7 @@ func (e *Error) HasTrait(key Trait) bool {
 	return false
 }
 
-// IsOfType is a proper type check for an error.
+// IsOfType is a proper type check for an errorx-based errors.
 // It takes the transparency and error types hierarchy into account,
 // so that type check against any supertype of the original cause passes.
 func (e *Error) IsOfType(t *Type) bool {
@@ -156,6 +156,25 @@ func (e *Error) Cause() error {
 	return e.cause
 }
 
+// Is returns true if and only if target is errorx error that passes errorx type check against current error.
+// This behaviour is exactly the same as that of IsOfType().
+// See also: errors.Is()
+func (e *Error) Is(target error) bool {
+	typedTarget := Cast(target)
+	return typedTarget != nil && IsOfType(e, typedTarget.Type())
+}
+
+// From errors package: if e.Unwrap() returns a non-nil error w, then we say that e wraps w.
+// Unwrap returns cause of current error in case it is wrapped transparently, nil otherwise.
+// See also: errors.Unwrap()
+func (e *Error) Unwrap() error {
+	if e.cause != nil && e.transparent {
+		return e.cause
+	} else {
+		return nil
+	}
+}
+
 // Format implements the Formatter interface.
 // Supported verbs:
 //
@@ -169,12 +188,12 @@ func (e *Error) Format(s fmt.State, verb rune) {
 	message := e.fullMessage()
 	switch verb {
 	case 'v':
-		io.WriteString(s, message)
+		_, _ = io.WriteString(s, message)
 		if s.Flag('+') {
 			e.stackTrace.Format(s, verb)
 		}
 	case 's':
-		io.WriteString(s, message)
+		_, _ = io.WriteString(s, message)
 	}
 }
 
@@ -244,30 +263,4 @@ func (e *Error) messageText() string {
 		return joinStringsIfNonEmpty(", cause: ", message, cause.Error())
 	}
 	return message
-}
-
-func joinStringsIfNonEmpty(delimiter string, parts ...string) string {
-	switch len(parts) {
-	case 0:
-		return ""
-	case 1:
-		return parts[0]
-	case 2:
-		if len(parts[0]) == 0 {
-			return parts[1]
-		} else if len(parts[1]) == 0 {
-			return parts[0]
-		} else {
-			return parts[0] + delimiter + parts[1]
-		}
-	default:
-		filteredParts := make([]string, 0, len(parts))
-		for _, part := range parts {
-			if len(part) > 0 {
-				filteredParts = append(filteredParts, part)
-			}
-		}
-
-		return strings.Join(filteredParts, delimiter)
-	}
 }

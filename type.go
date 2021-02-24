@@ -56,6 +56,7 @@ func (t *Type) NewWithNoMessage() *Error {
 // The original error will not pass its dynamic properties, and those are accessible only via direct walk over Cause() chain.
 // Without args, leaves the original message intact, so a message may be generated or provided externally.
 // With args, a formatting is performed, and it is therefore expected a format string to be constant.
+// NB: Wrap is NOT the reverse of errors.Unwrap() or Error.Unwrap() method; name may be changed in future releases to avoid confusion.
 func (t *Type) Wrap(err error, message string, args ...interface{}) *Error {
 	return NewErrorBuilder(t).
 		WithConditionallyFormattedMessage(message, args...).

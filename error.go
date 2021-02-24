@@ -103,22 +103,6 @@ func (e *Error) HasTrait(key Trait) bool {
 	return false
 }
 
-// IsOfType is a proper type check for an errorx-based errors.
-// It takes the transparency and error types hierarchy into account,
-// so that type check against any supertype of the original cause passes.
-func (e *Error) IsOfType(t *Type) bool {
-	cause := e
-	for cause != nil {
-		if !cause.transparent {
-			return cause.errorType.IsOfType(t)
-		}
-
-		cause = Cast(cause.Cause())
-	}
-
-	return false
-}
-
 // Type returns the exact type of this error.
 // With transparent wrapping, such as in Decorate(), returns the type of the original cause.
 // The result is always not nil, even if the resulting type is impossible to successfully type check against.

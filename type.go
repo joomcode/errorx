@@ -95,6 +95,14 @@ func (t *Type) HasTrait(key Trait) bool {
 	return ok
 }
 
+// IsOfType is a type check for errors.
+// Returns true either if both are of exactly the same type, or if the same is true for one of current type's ancestors.
+// Go 1.12 and below: for an error that does not have an errorx type, returns false.
+// Go 1.13 and above: for an error that does not have an errorx type, returns false unless it wraps another error of errorx type.
+func IsOfType(err error, t *Type) bool {
+	return isOfType(err, t)
+}
+
 // Supertype returns a parent type, if present.
 func (t *Type) Supertype() *Type {
 	return t.parent

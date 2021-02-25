@@ -122,4 +122,10 @@ func TestErrorsAndErrorx(t *testing.T) {
 		err := fmt.Errorf("error test: %w", Decorate(io.EOF, "test"))
 		require.True(t, errors.Is(err, io.EOF))
 	})
+
+	t.Run("Wrap", func(t *testing.T) {
+		err := fmt.Errorf("error test: %w", testType.Wrap(io.EOF, "test"))
+		require.False(t, errors.Is(err, io.EOF))
+		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
+	})
 }

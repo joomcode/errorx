@@ -4,6 +4,7 @@ package errorx
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"testing"
 
@@ -101,5 +102,30 @@ func TestErrorIs(t *testing.T) {
 	t.Run("DecorateForeign", func(t *testing.T) {
 		err := Decorate(io.EOF, "")
 		require.True(t, errors.Is(err, io.EOF))
+	})
+}
+
+func TestErrorsAndErrorx(t *testing.T) {
+	t.Run("DecoratedForeign", func(t *testing.T) {
+		err := fmt.Errorf("error test: %w", testType.NewWithNoMessage())
+		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
+		require.True(t, IsOfType(err, testType))
+	})
+
+	t.Run("LayeredDecorate", func(t *testing.T) {
+		err := Decorate(fmt.Errorf("error test: %w", testType.NewWithNoMessage()), "test")
+		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
+		require.True(t, IsOfType(err, testType))
+	})
+
+	t.Run("LayeredDecorateAgain", func(t *testing.T) {
+		err := fmt.Errorf("error test: %w", Decorate(io.EOF, "test"))
+		require.True(t, errors.Is(err, io.EOF))
+	})
+
+	t.Run("Wrap", func(t *testing.T) {
+		err := fmt.Errorf("error test: %w", testType.Wrap(io.EOF, "test"))
+		require.False(t, errors.Is(err, io.EOF))
+		require.True(t, errors.Is(err, testType.NewWithNoMessage()))
 	})
 }

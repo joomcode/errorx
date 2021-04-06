@@ -12,9 +12,6 @@ jobs:
 #        go: [1.8, 1.9, '1.10']
         go: [1.11, 1.12, 1.13, 1.14, 1.15, 1.16]
 
-#    env:
-#      GO111MODULE: on
-
     steps:
     - uses: actions/checkout@v2
     - name: Set up Go ${{ matrix.go }}

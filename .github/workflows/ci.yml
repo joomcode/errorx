@@ -23,6 +23,6 @@ jobs:
         go-version: ${{ matrix.go }}
     - name: "Setup dependencies"
       if: ${{ matrix.go == '1.8' }}
-      run: cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -; fi
+      run: cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -
     - name: Build
       run: go test -v ./...

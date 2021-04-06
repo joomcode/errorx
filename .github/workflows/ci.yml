@@ -9,8 +9,8 @@ jobs:
 
     strategy:
       matrix:
-#        go: [1.8, 1.9]
-        go: ['1.10', 1.11, 1.12, 1.13, 1.14, 1.15, 1.16]
+#        go: [1.8, 1.9, '1.10']
+        go: [1.10, 1.11, 1.12, 1.13, 1.14, 1.15, 1.16]
 
     env:
       GO111MODULE: on
@@ -21,6 +21,8 @@ jobs:
       uses: actions/setup-go@v1
       with:
         go-version: ${{ matrix.go }}
+    - name: Go version
+      run: go version
 #    - name: "Setup dependencies"
 #      if: ${{ matrix.go == '1.8' }}
 #      run: go get ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -

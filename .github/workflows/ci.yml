@@ -20,8 +20,10 @@ jobs:
       uses: actions/setup-go@v1
       with:
         go-version: ${{ matrix.go }}
-#    - name: "Setup dependencies"
-#      run: go get ./...
+    - name: "Setup dependencies"
+      run: go get ./...
+      env:
+        GOPATH: /home/runner/work/joomcode/go
 #    - name: "Setup dependencies"
 #      if: ${{ matrix.go == '1.8' }}
 #      run: go get ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -

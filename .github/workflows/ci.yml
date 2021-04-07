@@ -28,6 +28,6 @@ jobs:
 #      if: ${{ matrix.go == '1.8' }}
 #      run: go get ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -
     - name: Build
-      run: go test -v $GOPATH/src/github.com/${{ github.repository }}/...
+      run: cd go/src/github.com/${{ github.repository }} && test -v ./...
       env:
         GOPATH: /home/runner/work/errorx/errorx/go

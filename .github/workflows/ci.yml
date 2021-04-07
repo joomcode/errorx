@@ -14,6 +14,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
+      with:
+        path: ./src/github.com/${{ github.repository }}
     - name: Set up Go ${{ matrix.go }}
       uses: actions/setup-go@v1
       with:

@@ -1,0 +1,46 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        go: [1.8, 1.9, '1.10', 1.11, 1.12, 1.13, 1.14, 1.15, 1.16]
+
+    steps:
+
+    - name: Checkout to GOPATH
+      if: ${{ matrix.go == '1.8' || matrix.go == '1.9' || matrix.go == '1.10' }}
+      uses: actions/checkout@v2
+      with:
+        path: go/src/github.com/${{ github.repository }}
+
+    - name: Checkout with no GOPATH
+      if: ${{ matrix.go != '1.8' && matrix.go != '1.9' && matrix.go != '1.10' }}
+      uses: actions/checkout@v2
+
+    - name: Set up Go ${{ matrix.go }}
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.go }}
+
+    - name: "Setup dependencies"
+      if: ${{ matrix.go == '1.8' || matrix.go == '1.9' || matrix.go == '1.10' }}
+      run: go get -t ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd - && pwd
+      env:
+        GOPATH: /home/runner/work/errorx/errorx/go
+
+    - name: Build no modules
+      if: ${{ matrix.go == '1.8' || matrix.go == '1.9' || matrix.go == '1.10' }}
+      run: cd go/src/github.com/${{ github.repository }} && go test -v ./...
+      env:
+        GOPATH: /home/runner/work/errorx/errorx/go
+
+    - name: Build with modules
+      if: ${{ matrix.go != '1.8' && matrix.go != '1.9' && matrix.go != '1.10' }}
+      run: go test -v ./...
+

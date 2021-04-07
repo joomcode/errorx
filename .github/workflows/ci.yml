@@ -23,11 +23,11 @@ jobs:
     - name: "Setup dependencies"
       run: go get ./...
       env:
-        GOPATH: /home/runner/work/joomcode/go
+        GOPATH: /home/runner/work/errorx/errorx/go
 #    - name: "Setup dependencies"
 #      if: ${{ matrix.go == '1.8' }}
 #      run: go get ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -
     - name: Build
       run: go test -v ./...
       env:
-        GOPATH: /home/runner/work/joomcode/go
+        GOPATH: /home/runner/work/errorx/errorx/go

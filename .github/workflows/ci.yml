@@ -21,7 +21,7 @@ jobs:
       with:
         go-version: ${{ matrix.go }}
     - name: "Setup dependencies"
-      run: go get -d ./...
+      run: go get -t ./...
       env:
         GOPATH: /home/runner/work/errorx/errorx/go
 #    - name: "Setup dependencies"

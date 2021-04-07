@@ -15,17 +15,19 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        path: ./src/github.com/${{ github.repository }}
+        path: go/src/github.com/${{ github.repository }}
     - name: Set up Go ${{ matrix.go }}
       uses: actions/setup-go@v1
       with:
         go-version: ${{ matrix.go }}
     - name: "echo gopath"
       run: echo $GOPATH
-    - name: "Setup dependencies"
-      run: go get ./...
+#    - name: "Setup dependencies"
+#      run: go get ./...
 #    - name: "Setup dependencies"
 #      if: ${{ matrix.go == '1.8' }}
 #      run: go get ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -
     - name: Build
       run: go test -v ./...
+      env:
+        GOPATH: go

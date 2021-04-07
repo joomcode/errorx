@@ -35,10 +35,10 @@ jobs:
 #      run: go get ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -
     - name: Build no modules
       if: ${{ matrix.go == '1.8' || matrix.go == '1.9' || matrix.go == '1.10' }}
-      run: go test -v ./...
-    - name: Build with modules
-      if: ${{ matrix.go != '1.8' && matrix.go != '1.9' && matrix.go != '1.10' }}
       run: pwd && cd go/src/github.com/${{ github.repository }} && pwd && go test -v ./...
       env:
         GOPATH: /home/runner/work/errorx/errorx/go
+    - name: Build with modules
+      if: ${{ matrix.go != '1.8' && matrix.go != '1.9' && matrix.go != '1.10' }}
+      run: go test -v ./...
 

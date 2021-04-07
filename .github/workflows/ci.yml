@@ -21,13 +21,13 @@ jobs:
       with:
         go-version: ${{ matrix.go }}
     - name: "Setup dependencies"
-      run: go get -t ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -
+      run: pwd && go get -t ./... && cd $GOPATH/src/github.com/stretchr/testify/ && pwd && git checkout v1.2.2 && cd - && pwd
       env:
         GOPATH: /home/runner/work/errorx/errorx/go
 #    - name: "Setup dependencies"
 #      if: ${{ matrix.go == '1.8' }}
 #      run: go get ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -
     - name: Build
-      run: cd go/src/github.com/${{ github.repository }} && test -v ./...
+      run: pwd && cd go/src/github.com/${{ github.repository }} && pwd && test -v ./...
       env:
         GOPATH: /home/runner/work/errorx/errorx/go

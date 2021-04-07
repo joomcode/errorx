@@ -21,7 +21,7 @@ jobs:
       with:
         go-version: ${{ matrix.go }}
     - name: "Setup dependencies"
-      run: go get -t ./...
+      run: go get -t ./... && cd $GOPATH/src/github.com/stretchr/testify/ && git checkout v1.2.2 && cd -
       env:
         GOPATH: /home/runner/work/errorx/errorx/go
 #    - name: "Setup dependencies"

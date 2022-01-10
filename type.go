@@ -56,6 +56,7 @@ func (t *Type) NewWithNoMessage() *Error {
 // The original error will not pass its dynamic properties, and those are accessible only via direct walk over Cause() chain.
 // Without args, leaves the original message intact, so a message may be generated or provided externally.
 // With args, a formatting is performed, and it is therefore expected a format string to be constant.
+// NB: Wrap is NOT the reverse of errors.Unwrap() or Error.Unwrap() method; name may be changed in future releases to avoid confusion.
 func (t *Type) Wrap(err error, message string, args ...interface{}) *Error {
 	return NewErrorBuilder(t).
 		WithConditionallyFormattedMessage(message, args...).
@@ -96,10 +97,10 @@ func (t *Type) HasTrait(key Trait) bool {
 
 // IsOfType is a type check for errors.
 // Returns true either if both are of exactly the same type, or if the same is true for one of current type's ancestors.
-// For an error that does not have an errorx type, returns false.
+// Go 1.12 and below: for an error that does not have an errorx type, returns false.
+// Go 1.13 and above: for an error that does not have an errorx type, returns false unless it wraps another error of errorx type.
 func IsOfType(err error, t *Type) bool {
-	e := Cast(err)
-	return e != nil && e.IsOfType(t)
+	return isOfType(err, t)
 }
 
 // Supertype returns a parent type, if present.

@@ -1,5 +1,4 @@
 [![Github Actions Build Status](https://github.com/joomcode/errorx/workflows/CI/badge.svg)](https://github.com/joomcode/errorx/actions)
-[![Travis Build Status](https://travis-ci.com/joomcode/errorx.svg?branch=master)](https://travis-ci.com/joomcode/errorx)
 [![GoDoc](https://img.shields.io/static/v1?label=godev&message=reference&color=00add8)](https://pkg.go.dev/github.com/joomcode/errorx?tab=doc)
 [![Report Card](https://goreportcard.com/badge/github.com/joomcode/errorx)](https://goreportcard.com/report/github.com/joomcode/errorx)
 [![gocover.io](https://gocover.io/_badge/github.com/joomcode/errorx)](https://gocover.io/github.com/joomcode/errorx)

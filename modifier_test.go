@@ -7,6 +7,10 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
+
+
+
+
 var (
 	modifierTestNamespace                 = NewNamespace("modifier")
 	modifierTestNamespaceTransparent      = NewNamespace("modifierTransparent").ApplyModifiers(TypeModifierTransparent)

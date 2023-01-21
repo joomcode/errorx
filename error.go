@@ -170,9 +170,9 @@ func (e *Error) Unwrap() error {
 // Format implements the Formatter interface.
 // Supported verbs:
 //
-// 		%s		simple message output
-// 		%v		same as %s
-// 		%+v		full output complete with a stack trace
+//	%s		simple message output
+//	%v		same as %s
+//	%+v		full output complete with a stack trace
 //
 // In is nearly always preferable to use %+v format.
 // If a stack trace is not required, it should be omitted at the moment of creation rather in formatting.
@@ -187,6 +187,20 @@ func (e *Error) Format(s fmt.State, verb rune) {
 	case 's':
 		_, _ = io.WriteString(s, message)
 	}
+}
+
+// GetFrames exports stacktrace as frame slice.
+func (e *Error) GetFrames() []Frame {
+	if e.stackTrace == nil {
+		return nil
+	}
+
+	pc, _ := e.stackTrace.deduplicateFramesWithCause()
+	if len(pc) == 0 {
+		return nil
+	}
+
+	return frameHelperSingleton.GetFrames(pc)
 }
 
 // Error implements the error interface.

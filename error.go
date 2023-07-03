@@ -160,7 +160,7 @@ func (e *Error) Is(target error) bool {
 // Unwrap returns cause of current error in case it is wrapped transparently, nil otherwise.
 // See also: errors.Unwrap()
 func (e *Error) Unwrap() error {
-	if e.cause != nil && e.transparent {
+	if e != nil && e.cause != nil && e.transparent {
 		return e.cause
 	} else {
 		return nil
@@ -170,9 +170,9 @@ func (e *Error) Unwrap() error {
 // Format implements the Formatter interface.
 // Supported verbs:
 //
-// 		%s		simple message output
-// 		%v		same as %s
-// 		%+v		full output complete with a stack trace
+//	%s		simple message output
+//	%v		same as %s
+//	%+v		full output complete with a stack trace
 //
 // In is nearly always preferable to use %+v format.
 // If a stack trace is not required, it should be omitted at the moment of creation rather in formatting.

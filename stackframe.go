@@ -4,7 +4,7 @@ import (
 	"runtime"
 )
 
-type frame interface {
+type Frame interface {
 	Function() string
 	File() string
 	Line() int
@@ -31,9 +31,9 @@ func (f *defaultFrame) Line() int {
 	return f.frame.Line
 }
 
-func (c *frameHelper) GetFrames(pcs []uintptr) []frame {
+func (c *frameHelper) GetFrames(pcs []uintptr) []Frame {
 	frames := runtime.CallersFrames(pcs[:])
-	result := make([]frame, 0, len(pcs))
+	result := make([]Frame, 0, len(pcs))
 
 	var rawFrame runtime.Frame
 	next := true

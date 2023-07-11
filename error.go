@@ -189,6 +189,20 @@ func (e *Error) Format(s fmt.State, verb rune) {
 	}
 }
 
+// GetFrames exports stacktrace as frame slice.
+func (e *Error) GetFrames() []Frame {
+	if e.stackTrace == nil {
+		return nil
+	}
+
+	pc, _ := e.stackTrace.deduplicateFramesWithCause()
+	if len(pc) == 0 {
+		return nil
+	}
+
+	return frameHelperSingleton.GetFrames(pc)
+}
+
 // Error implements the error interface.
 // A result is the same as with %s formatter and does not contain a stack trace.
 func (e *Error) Error() string {

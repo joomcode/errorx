@@ -9,14 +9,15 @@ import (
 )
 
 var (
-	testNamespace       = NewNamespace("foo")
-	testType            = testNamespace.NewType("bar")
-	testTypeSilent      = testType.NewSubtype("silent").ApplyModifiers(TypeModifierOmitStackTrace)
-	testTypeTransparent = testType.NewSubtype("transparent").ApplyModifiers(TypeModifierTransparent)
-	testSubtype0        = testType.NewSubtype("internal")
-	testSubtype1        = testSubtype0.NewSubtype("wat")
-	testTypeBar1        = testNamespace.NewType("bar1")
-	testTypeBar2        = testNamespace.NewType("bar2")
+	testNamespace             = NewNamespace("foo")
+	testType                  = testNamespace.NewType("bar")
+	testTypeSilent            = testType.NewSubtype("silent").ApplyModifiers(TypeModifierOmitStackTrace)
+	testTypeTransparent       = testType.NewSubtype("transparent").ApplyModifiers(TypeModifierTransparent)
+	testTypeSilentTransparent = testType.NewSubtype("silent_transparent").ApplyModifiers(TypeModifierTransparent, TypeModifierOmitStackTrace)
+	testSubtype0              = testType.NewSubtype("internal")
+	testSubtype1              = testSubtype0.NewSubtype("wat")
+	testTypeBar1              = testNamespace.NewType("bar1")
+	testTypeBar2              = testNamespace.NewType("bar2")
 )
 
 func TestError(t *testing.T) {

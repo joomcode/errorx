@@ -33,13 +33,17 @@ func NewErrorBuilder(t *Type) ErrorBuilder {
 }
 
 // WithCause provides an original cause for error.
-// For non-errorx errors, a stack trace is collected.
+// For non-errorx errors, a stack trace is collected unless Type tells otherwise.
 // Otherwise, it is inherited by default, as error wrapping is typically performed 'en passe'.
 // Note that even if an original error explicitly omitted the stack trace, it could be added on wrap.
 func (eb ErrorBuilder) WithCause(err error) ErrorBuilder {
 	eb.cause = err
 	if Cast(err) != nil {
-		eb.mode = stackTraceBorrow
+		if eb.errorType.modifiers.CollectStackTrace() {
+			eb.mode = stackTraceBorrowOrCollect
+		} else {
+			eb.mode = stackTraceBorrowOnly
+		}
 	}
 
 	return eb
@@ -105,18 +109,25 @@ func (eb ErrorBuilder) Create() *Error {
 type callStackBuildMode int
 
 const (
-	stackTraceCollect callStackBuildMode = 1
-	stackTraceBorrow  callStackBuildMode = 2
-	stackTraceEnhance callStackBuildMode = 3
-	stackTraceOmit    callStackBuildMode = 4
+	stackTraceCollect         callStackBuildMode = 1
+	stackTraceBorrowOrCollect callStackBuildMode = 2
+	stackTraceBorrowOnly      callStackBuildMode = 3
+	stackTraceEnhance         callStackBuildMode = 4
+	stackTraceOmit            callStackBuildMode = 5
 )
 
 func (eb ErrorBuilder) assembleStackTrace() *stackTrace {
 	switch eb.mode {
 	case stackTraceCollect:
 		return eb.collectOriginalStackTrace()
-	case stackTraceBorrow:
+	case stackTraceBorrowOnly:
 		return eb.borrowStackTraceFromCause()
+	case stackTraceBorrowOrCollect:
+		if st := eb.borrowStackTraceFromCause(); st != nil {
+			return st
+		}
+
+		return eb.collectOriginalStackTrace()
 	case stackTraceEnhance:
 		return eb.combineStackTraceWithCause()
 	case stackTraceOmit:
@@ -131,11 +142,7 @@ func (eb ErrorBuilder) collectOriginalStackTrace() *stackTrace {
 }
 
 func (eb ErrorBuilder) borrowStackTraceFromCause() *stackTrace {
-	originalStackTrace := eb.extractStackTraceFromCause(eb.cause)
-	if originalStackTrace != nil {
-		return originalStackTrace
-	}
-	return collectStackTrace()
+	return eb.extractStackTraceFromCause(eb.cause)
 }
 
 func (eb ErrorBuilder) combineStackTraceWithCause() *stackTrace {
